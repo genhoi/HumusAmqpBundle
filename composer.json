@@ -1,0 +1,28 @@
+{
+  "name": "genhoi/humus-amqp-bundle",
+  "description": "rabbitmq consumer",
+  "keywords": ["symfony", "rabbitmq", "message", "queue", "amqp", "humusamqp"],
+  "type": "symfony-bundle",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Evgeniy Glazyrin"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Humus\\AmqpBundle\\": "src"
+    }
+  },
+  "require": {
+    "php": "^7.1.3",
+    "ext-json": "*",
+    "prolic/humus-amqp": "^1.4",
+    "symfony/console": "^4.3 || ^5.0",
+    "symfony/dependency-injection": "^4.3 || ^5.0",
+    "symfony/config": "^4.3 || ^5.0"
+  },
+  "suggest": {
+    "symfony/framework-bundle": "To use this lib as a full Symfony Bundle"
+  }
+}
