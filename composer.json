@@ -14,6 +14,11 @@
       "Humus\\AmqpBundle\\": "src"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "HumusTest\\AmqpBundle\\": "tests/"
+    }
+  },
   "require": {
     "php": "^7.1.3",
     "ext-json": "*",
@@ -24,5 +29,8 @@
   },
   "suggest": {
     "symfony/framework-bundle": "To use this lib as a full Symfony Bundle"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^8"
   }
 }
