@@ -39,6 +39,10 @@ return [
                     'queue' => 'test_queue',
                     'delivery_callback' => DeliveryCallback::class,
                     'error_callback' => ErrorCallback::class,
+                    'qos' => [
+                        'prefetch_count' => 3,
+                        'prefetch_size' => 0,
+                    ]
                 ],
             ],
             'producer' => [

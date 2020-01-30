@@ -74,6 +74,10 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('logger')->defaultNull()->end()
             ->scalarNode('consumer_tag')->defaultNull()->end()
             ->scalarNode('idle_timeout')->defaultValue(5.0)->end()
+            ->arrayNode('qos')->children()
+                ->scalarNode('prefetch_count')->defaultValue(3)->end()
+                ->scalarNode('prefetch_size')->defaultValue(0)->end()
+            ->end()
         ->end();
 
         return $node;

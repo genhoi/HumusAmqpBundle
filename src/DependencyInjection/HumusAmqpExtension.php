@@ -20,6 +20,7 @@ use Humus\AmqpBundle\Command\CallbackConsumerCommand;
 use Humus\AmqpBundle\Command\PublishMessageCommand;
 use Humus\AmqpBundle\Command\PurgeQueueCommand;
 use Humus\AmqpBundle\Command\SetupFabricCommand;
+use Humus\AmqpBundle\Factory\ConsumerFactory;
 use Humus\AmqpBundle\Factory\ExchangeFactory;
 use Humus\AmqpBundle\Factory\QueueFactory;
 use Humus\AmqpBundle\SetupFabric\FabricService;
@@ -52,7 +53,6 @@ class HumusAmqpExtension extends Extension
         return 'humus';
     }
 
-
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = $this->getConfiguration($configs, $container);
@@ -65,6 +65,7 @@ class HumusAmqpExtension extends Extension
 
         $this->loadExchangeFactory();
         $this->loadExchanges();
+        $this->loadConsumerFactory();
 
         $this->loadQueueFactory();
         $this->loadQueues();
@@ -92,6 +93,13 @@ class HumusAmqpExtension extends Extension
             ->register(QueueFactory::class)
             ->setClass(QueueFactory::class)
             ->setArguments([new Reference(FabricService::class)]);
+    }
+
+    protected function loadConsumerFactory()
+    {
+        $this->container
+            ->register(ConsumerFactory::class)
+            ->setClass(ConsumerFactory::class);
     }
 
     protected function loadProducers()
@@ -161,16 +169,18 @@ class HumusAmqpExtension extends Extension
         $queue = "humus.amqp.queue." . $options['queue'];
         $queueReference = new Reference($queue);
 
+        $factoryRef = new Reference(ConsumerFactory::class);
+
         $definition = new Definition(CallbackConsumer::class);
         $definition
+            ->setFactory([$factoryRef, 'create'])
             ->setArguments([
                 $queueReference,
                 $loggerDefinition,
-                $options['idle_timeout'] ?? 0,
                 $deliveryCallback,
                 $flushCallback,
                 $errorCallback,
-                $options['consumer_tag'] ?? ''
+                $options
             ])
             ->addTag(self::CONSUMER_TAG, ['consumer_name' => $name]);
 
