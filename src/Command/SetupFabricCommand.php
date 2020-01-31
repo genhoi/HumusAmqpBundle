@@ -28,7 +28,7 @@ class SetupFabricCommand extends Command
 
     public static function getDefaultName()
     {
-        return 'humus-amqp:purge-queue';
+        return 'humus-amqp:setup-fabric';
     }
 
     /**
