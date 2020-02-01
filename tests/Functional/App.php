@@ -2,7 +2,12 @@
 
 namespace HumusTest\AmqpBundle\Functional;
 
+use Humus\Amqp\Consumer;
+use Humus\Amqp\Exchange;
+use Humus\Amqp\Producer;
+use Humus\Amqp\Queue;
 use Humus\AmqpBundle\DependencyInjection\HumusAmqpExtension;
+use Humus\AmqpBundle\SetupFabric\FabricService;
 use HumusTest\AmqpBundle\Functional\ConsumerCallback\DeliveryCallback;
 use HumusTest\AmqpBundle\Functional\ConsumerCallback\ErrorCallback;
 use Psr\Container\ContainerInterface;
@@ -49,6 +54,14 @@ class App
         $this->container->compile();
     }
 
+    protected function loadConsumerCallback(ContainerBuilder $builder)
+    {
+        $builder->addDefinitions([
+            DeliveryCallback::class => new Definition(DeliveryCallback::class),
+            ErrorCallback::class => new Definition(ErrorCallback::class),
+        ]);
+    }
+
     public static function get(string $id)
     {
         if (self::$instance) {
@@ -59,12 +72,29 @@ class App
         return self::$instance->container->get($id);
     }
 
-    protected function loadConsumerCallback(ContainerBuilder $builder)
+    public static function getFabricService() : FabricService
     {
-        $builder->addDefinitions([
-            DeliveryCallback::class => new Definition(DeliveryCallback::class),
-            ErrorCallback::class => new Definition(ErrorCallback::class),
-        ]);
+        return App::get(FabricService::class);
+    }
+
+    public static function getTestQueue() : Queue
+    {
+        return App::get('humus.amqp.queue.test_queue');
+    }
+
+    public static function getTestExchange() : Exchange
+    {
+        return App::get('humus.amqp.exchange.test_exchange');
+    }
+
+    public static function getTestQueueConsumer() : Consumer
+    {
+        return App::get('humus.amqp.callback_consumer.test_queue_consumer');
+    }
+
+    public static function getTestProducer() : Producer
+    {
+        return App::get('humus.amqp.producer.test_producer');
     }
 
 }

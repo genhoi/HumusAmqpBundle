@@ -37,7 +37,7 @@ class SetupExchange implements Exchange
      */
     public function setup()
     {
-        $this->setupFabricService->setupExchange($this->exchange->getName());
+        $this->setupFabricService->setupExchange($this->exchange);
     }
 
     public function getName(): string

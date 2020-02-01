@@ -24,7 +24,7 @@ use Humus\AmqpBundle\Factory\ConsumerFactory;
 use Humus\AmqpBundle\Factory\ExchangeFactory;
 use Humus\AmqpBundle\Factory\QueueFactory;
 use Humus\AmqpBundle\SetupFabric\FabricService;
-use Humus\AmqpBundle\SetupFabric\Tracer\NullSetupFabricTracer;
+use Humus\AmqpBundle\SetupFabric\Tracer\NullFabricTracer;
 use Psr\Log\NullLogger;
 use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
@@ -413,13 +413,13 @@ class HumusAmqpExtension extends Extension
 
     protected function loadDeclareService()
     {
-        $this->container->setDefinition(NullSetupFabricTracer::class, new Definition(NullSetupFabricTracer::class));
+        $this->container->setDefinition(NullFabricTracer::class, new Definition(NullFabricTracer::class));
         $this->container->setDefinition(FabricService::class, new Definition(FabricService::class, [
             new ServiceLocatorArgument(new TaggedIteratorArgument(self::QUEUE_TAG, 'queue_name', null, true)),
             new ServiceLocatorArgument(new TaggedIteratorArgument(self::EXCHANGE_TAG, 'exchange_name', null, true)),
             new Reference('humus.amqp.binding_repository.queue'),
             new Reference('humus.amqp.binding_repository.exchange'),
-            new Reference(NullSetupFabricTracer::class),
+            new Reference(NullFabricTracer::class),
         ]));
     }
 }

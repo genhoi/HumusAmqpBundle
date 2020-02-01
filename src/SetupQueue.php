@@ -32,7 +32,7 @@ class SetupQueue implements Queue
 
     public function setup(bool $setupExchanges)
     {
-        $this->setupFabricService->setupQueue($this->getName(), $setupExchanges);
+        $this->setupFabricService->setupQueue($this->queue, $setupExchanges);
     }
 
     public function getName(): string

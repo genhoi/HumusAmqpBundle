@@ -27,9 +27,11 @@ return [
                 'test_queue' => [
                     'connection' => 'default',
                     'durable' => true,
+                    'auto_setup_fabric' => true,
+                    'auto_setup_exchanges' => true,
                     'exchanges' => [
                         'test_exchange' => [
-                            'routing_keys' => ['']
+                            'routing_keys' => ['', 'key-1']
                         ],
                     ],
                 ],

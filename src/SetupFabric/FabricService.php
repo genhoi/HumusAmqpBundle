@@ -5,7 +5,7 @@ namespace Humus\AmqpBundle\SetupFabric;
 use Humus\Amqp\Exchange;
 use Humus\Amqp\Queue;
 use Humus\AmqpBundle\Binding\BindingRepository;
-use Humus\AmqpBundle\SetupFabric\Tracer\SetupFabricTracerInterface;
+use Humus\AmqpBundle\SetupFabric\Tracer\FabricTracerInterface;
 use Symfony\Contracts\Service\ServiceProviderInterface;
 
 class FabricService
@@ -32,7 +32,7 @@ class FabricService
     protected $exchangeBindingRepository;
 
     /**
-     * @var SetupFabricTracerInterface
+     * @var FabricTracerInterface
      */
     protected $tracer;
 
@@ -42,14 +42,14 @@ class FabricService
      * @param ServiceProviderInterface $exchanges
      * @param BindingRepository $queueBindingRepository
      * @param BindingRepository $exchangeBindingRepository
-     * @param SetupFabricTracerInterface $tracer
+     * @param FabricTracerInterface $tracer
      */
     public function __construct(
         ServiceProviderInterface $queues,
         ServiceProviderInterface $exchanges,
         BindingRepository $queueBindingRepository,
         BindingRepository $exchangeBindingRepository,
-        SetupFabricTracerInterface $tracer
+        FabricTracerInterface $tracer
     ) {
         $this->queuesLocator = $queues;
         $this->exchangesLocator = $exchanges;
@@ -59,10 +59,10 @@ class FabricService
     }
 
     /**
-     * @param SetupFabricTracerInterface $declareTracer
+     * @param FabricTracerInterface $declareTracer
      * @return FabricService
      */
-    public function withTracer(SetupFabricTracerInterface $declareTracer)
+    public function withTracer(FabricTracerInterface $declareTracer)
     {
         return new self(
             $this->queuesLocator,
@@ -74,7 +74,7 @@ class FabricService
     }
 
     /**
-     * @param string $queueName
+     * @param Queue $queue
      * @param bool $setupExchanges
      *
      * @return void
@@ -82,13 +82,10 @@ class FabricService
      * @throws \Humus\Amqp\Exception\ChannelException
      * @throws \Humus\Amqp\Exception\QueueException
      */
-    public function setupQueue(string $queueName, bool $setupExchanges)
+    public function setupQueue(Queue $queue, bool $setupExchanges)
     {
-        if (!$this->queuesLocator->has($queueName)) {
-            return;
-        }
+        $queueName = $queue->getName();
 
-        $queue = $this->queuesLocator->get($queueName); /** @var $queue Queue */
         $queue->declareQueue();
         $this->tracer->declaredQueue($queueName);
 
@@ -106,7 +103,8 @@ class FabricService
             }
 
             foreach ($exchanges as $exchangeName) {
-                $this->setupExchange($exchangeName);
+                $bindingExchange = $this->exchangesLocator->get($exchangeName);
+                $this->setupExchange($bindingExchange);
             }
         }
 
@@ -123,24 +121,23 @@ class FabricService
      *
      * @return void
      */
-    public function setupExchange(string $exchangeName)
+    public function setupExchange(Exchange $exchange)
     {
-        if (!$this->exchangesLocator->has($exchangeName)) {
-            return;
-        }
-        
-        $exchange = $this->exchangesLocator->get($exchangeName); /** @var $exchange Exchange */
+        $exchangeName = $exchange->getName();
+
         $exchange->declareExchange();
         $this->tracer->declaredExchange($exchangeName);
 
         $arguments = $exchange->getArguments();
         if (isset($arguments['alternate-exchange'])) {
             // auto setup fabric alternate exchange
-            $this->setupExchange($arguments['alternate-exchange']);
+            $alternateExchange = $this->exchangesLocator->get($arguments['alternate-exchange']);
+            $this->setupExchange($alternateExchange);
         }
         $bindings = $this->exchangeBindingRepository->findByName($exchangeName);
         foreach ($bindings as $binding) {
-            $this->setupExchange($binding->getExchangeName());
+            $bindingExchange = $this->exchangesLocator->get($binding->getExchangeName());
+            $this->setupExchange($bindingExchange);
         }
 
         foreach ($bindings as $binding) {
@@ -158,10 +155,12 @@ class FabricService
     public function setup()
     {
         foreach ($this->exchangesLocator->getProvidedServices() as $name => $exchange) {
-            $this->setupExchange($name);
+            $exchange = $this->exchangesLocator->get($name);
+            $this->setupExchange($exchange);
         }
         foreach ($this->queuesLocator->getProvidedServices() as $name => $queue) {
-            $this->setupQueue($name, false);
+            $queue = $this->queuesLocator->get($name);
+            $this->setupQueue($queue, false);
         }
     }
 
@@ -171,11 +170,13 @@ class FabricService
             /** @var Exchange $exchange */
             $exchange = $this->exchangesLocator->get($name);
             $exchange->delete();
+            $this->tracer->deleteExchange($exchange->getName());
         }
         foreach ($this->queuesLocator->getProvidedServices() as $name => $type) {
             /** @var Queue $queue */
             $queue = $this->queuesLocator->get($name);
             $queue->delete();
+            $this->tracer->deleteQueue($queue->getName());
         }
     }
 }

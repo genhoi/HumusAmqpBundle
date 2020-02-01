@@ -4,7 +4,7 @@ namespace Humus\AmqpBundle\SetupFabric\Tracer;
 
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ConsoleOutputSetupFabricTracer implements SetupFabricTracerInterface
+class ConsoleOutputFabricTracer implements FabricTracerInterface
 {
     /**
      * @var OutputInterface
@@ -38,5 +38,15 @@ class ConsoleOutputSetupFabricTracer implements SetupFabricTracerInterface
     public function bindExchange(string $exchangeName, string $boundExchangeName, string $routingKey)
     {
         $this->output->writeln("Exchange <info>$exchangeName</info> bind to <info>$boundExchangeName</info> with routing key <info>'$routingKey'</info>");
+    }
+
+    public function deleteQueue(string $queueName)
+    {
+        $this->output->writeln("Queue <info>$queueName</info> deleted");
+    }
+
+    public function deleteExchange(string $exchangeName)
+    {
+        $this->output->writeln("Exchange <info>$exchangeName</info> deleted");
     }
 }

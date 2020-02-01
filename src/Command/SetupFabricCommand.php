@@ -3,7 +3,7 @@
 namespace Humus\AmqpBundle\Command;
 
 use Humus\AmqpBundle\SetupFabric\FabricService;
-use Humus\AmqpBundle\SetupFabric\Tracer\ConsoleOutputSetupFabricTracer;
+use Humus\AmqpBundle\SetupFabric\Tracer\ConsoleOutputFabricTracer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -48,7 +48,7 @@ class SetupFabricCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->setupFabricService
-            ->withTracer(new ConsoleOutputSetupFabricTracer($output))
+            ->withTracer(new ConsoleOutputFabricTracer($output))
             ->setup();
 
         $output->writeln('Done');
