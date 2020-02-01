@@ -52,5 +52,7 @@ class SetupFabricCommand extends Command
             ->setup();
 
         $output->writeln('Done');
+
+        return 0;
     }
 }
