@@ -58,96 +58,56 @@ $containerBuilder->registerExtension(new HumusAmqpExtension());
 Add the `humus` section in your configuration file:
 
 ```yaml
+---
 humus:
   amqp:
     driver: amqp-extension
     connection:
-      default-amqp-connection:
-        host: localhost
-        port: 5672
+      default:
+        vhost: "/"
         login: guest
         password: guest
-        vhost: "/"
-        persistent: true
-        read_timeout: 3
-        write_timeout: 1
+        host: rabbitmq
+        port: 5672
     exchange:
-      demo:
-        name: demo
+      test_exchange:
+        connection: default
+        durable: true
         type: direct
-        connection: default-amqp-connection
-      demo.error:
-        name: demo.error
-        type: direct
-        connection: default-amqp-connection
-      topic-exchange:
-        name: topic-exchange
-        type: topic
-        connection: default-amqp-connection
-      demo-rpc-client:
-        name: demo-rpc-client
-        type: direct
-        connection: default-amqp-connection
-      demo-rpc-server:
-        name: demo-rpc-server
-        type: direct
-        connection: default-amqp-connection
-      demo-rpc-server2:
-        name: demo-rpc-server2
-        type: direct
-        connection: default-amqp-connection
     queue:
-      foo:
-        name: foo
-        exchanges:
-          demo:
-          - arguments:
-              x-dead-letter-exchange: demo.error
-        connection: default-amqp-connection
-      demo-rpc-client:
-        name: ''
-        exchanges:
-          demo-rpc-client: []
-        connection: default-amqp-connection
-      demo-rpc-server:
-        name: demo-rpc-server
-        exchanges:
-          demo-rpc-server: []
-        connection: default-amqp-connection
-      demo-rpc-server2:
-        name: demo-rpc-server2
-        exchanges:
-          demo-rpc-server2: []
-        connection: default-amqp-connection
-      info-queue:
-        name: info-queue
-        exchanges:
-          topic-exchange:
-          - routing_keys:
-            - "#.err"
-        connection: default-amqp-connection
-    producer:
-      demo-producer:
-        type: plain
-        exchange: demo
-        qos:
-          prefetch_size: 0
-          prefetch_count: 10
+      test_queue:
+        connection: default
+        durable: true
         auto_setup_fabric: true
-      topic-producer:
-        exchange: topic-exchange
+        auto_setup_exchanges: true
+        arguments:
+          x-dead-letter-exchange: test_exchange
+          x-dead-letter-routing-key: delayed
+        exchanges:
+          test_exchange:
+            routing_keys:
+            - ''
+            - key-1
+      test_queue_delayed:
+        connection: default
+        durable: true
         auto_setup_fabric: true
+        auto_setup_exchanges: true
+        exchanges:
+          test_exchange:
+            routing_keys:
+            - delayed
     callback_consumer:
-      demo-consumer:
-        queue: foo
-        callback: echo
-        idle_timeout: 10
-        delivery_callback: my_callback
-      topic-consumer-error:
-        queue: info-queue
+      test_queue_consumer:
+        queue: test_queue
+        delivery_callback: HumusTest\AmqpBundle\Functional\ConsumerCallback\DeliveryCallback
+        error_callback: HumusTest\AmqpBundle\Functional\ConsumerCallback\ErrorCallback
+        logger: monolog
         qos:
-          prefetch_count: 100
-        auto_setup_fabric: true
-        callback: echo
-        logger: consumer-logger
+          prefetch_count: 3
+          prefetch_size: 0
+    producer:
+      test_producer:
+        type: json
+        exchange: test_exchange
 ```
