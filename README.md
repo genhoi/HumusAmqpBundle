@@ -1,4 +1,6 @@
-# HumusAmqpBundle #
+#  HumusAmqpBundle #
+
+![](https://github.com/genhoi/HumusAmqpBundle/workflows/CI/badge.svg?branch=master)
 
 ## Caution ##
 
