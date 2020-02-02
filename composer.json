@@ -32,5 +32,8 @@
   },
   "require-dev": {
     "phpunit/phpunit": "^8"
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit --bootstrap vendor/autoload.php tests"
   }
 }
