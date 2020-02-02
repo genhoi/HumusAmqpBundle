@@ -29,9 +29,24 @@ return [
                     'durable' => true,
                     'auto_setup_fabric' => true,
                     'auto_setup_exchanges' => true,
+                    'arguments' => [
+                        'x-dead-letter-exchange' => 'test_exchange',
+                        'x-dead-letter-routing-key' => 'delayed',
+                    ],
                     'exchanges' => [
                         'test_exchange' => [
                             'routing_keys' => ['', 'key-1']
+                        ],
+                    ],
+                ],
+                'test_queue_delayed' => [
+                    'connection' => 'default',
+                    'durable' => true,
+                    'auto_setup_fabric' => true,
+                    'auto_setup_exchanges' => true,
+                    'exchanges' => [
+                        'test_exchange' => [
+                            'routing_keys' => ['delayed']
                         ],
                     ],
                 ],
