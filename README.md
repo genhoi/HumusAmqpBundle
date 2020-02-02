@@ -58,7 +58,6 @@ $containerBuilder->registerExtension(new HumusAmqpExtension());
 Add the `humus` section in your configuration file:
 
 ```yaml
----
 humus:
   amqp:
     driver: amqp-extension
