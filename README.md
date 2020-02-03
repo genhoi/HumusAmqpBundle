@@ -38,7 +38,7 @@ public function registerBundles()
 ```
 {
     "require": {
-        "genhoi/humus-amqp-bundle": "^0.3.0",
+        "genhoi/humus-amqp-bundle": "^0.4.0",
     }
 }
 ```

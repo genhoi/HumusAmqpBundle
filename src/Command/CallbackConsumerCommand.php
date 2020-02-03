@@ -60,7 +60,7 @@ class CallbackConsumerCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $consumerName = $input->getOption('name');
+        $consumerName = $input->getArgument('name');
 
         if (! $consumerName) {
             $output->writeln('No consumer given');
