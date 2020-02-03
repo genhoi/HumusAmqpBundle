@@ -36,14 +36,6 @@ class FabricService
      */
     protected $tracer;
 
-    /**
-     * DeclareService constructor.
-     * @param ServiceProviderInterface $queues
-     * @param ServiceProviderInterface $exchanges
-     * @param BindingRepository $queueBindingRepository
-     * @param BindingRepository $exchangeBindingRepository
-     * @param FabricTracerInterface $tracer
-     */
     public function __construct(
         ServiceProviderInterface $queues,
         ServiceProviderInterface $exchanges,
@@ -58,11 +50,7 @@ class FabricService
         $this->tracer = $tracer;
     }
 
-    /**
-     * @param FabricTracerInterface $declareTracer
-     * @return FabricService
-     */
-    public function withTracer(FabricTracerInterface $declareTracer)
+    public function withTracer(FabricTracerInterface $declareTracer) : FabricService
     {
         return new self(
             $this->queuesLocator,
@@ -73,16 +61,7 @@ class FabricService
         );
     }
 
-    /**
-     * @param Queue $queue
-     * @param bool $setupExchanges
-     *
-     * @return void
-     *
-     * @throws \Humus\Amqp\Exception\ChannelException
-     * @throws \Humus\Amqp\Exception\QueueException
-     */
-    public function setupQueue(Queue $queue, bool $setupExchanges)
+    public function setupQueue(Queue $queue, bool $setupExchanges) : void
     {
         $queueName = $queue->getName();
 
@@ -116,12 +95,7 @@ class FabricService
         }
     }
 
-    /**
-     * @param string $exchangeName
-     *
-     * @return void
-     */
-    public function setupExchange(Exchange $exchange)
+    public function setupExchange(Exchange $exchange): void
     {
         $exchangeName = $exchange->getName();
 
@@ -148,11 +122,7 @@ class FabricService
         }
     }
 
-    /**
-     * @throws \Humus\Amqp\Exception\ChannelException
-     * @throws \Humus\Amqp\Exception\QueueException
-     */
-    public function setup()
+    public function setup(): void
     {
         foreach ($this->exchangesLocator->getProvidedServices() as $name => $exchange) {
             $exchange = $this->exchangesLocator->get($name);
@@ -164,7 +134,7 @@ class FabricService
         }
     }
 
-    public function delete()
+    public function delete(): void
     {
         foreach ($this->exchangesLocator->getProvidedServices() as $name => $type) {
             /** @var Exchange $exchange */

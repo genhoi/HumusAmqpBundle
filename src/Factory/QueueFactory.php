@@ -4,6 +4,7 @@ namespace Humus\AmqpBundle\Factory;
 
 use Humus\Amqp\Channel;
 use Humus\Amqp\Constants;
+use Humus\Amqp\Queue;
 use Humus\AmqpBundle\SetupFabric\FabricService;
 use Humus\AmqpBundle\SetupQueue;
 
@@ -14,27 +15,18 @@ class QueueFactory
      */
     protected $declareService;
 
-    /**
-     * QueueFactory constructor.
-     * @param FabricService $declareService
-     */
     public function __construct(FabricService $declareService)
     {
         $this->declareService = $declareService;
     }
 
-    /**
-     * @param Channel $channel
-     * @param $options
-     * @return SetupQueue
-     */
-    public function createSetup(Channel $channel, $options)
+    public function createSetup(Channel $channel, array $options): SetupQueue
     {
         $queue = $this->create($channel, $options);
         return new SetupQueue($queue, $this->declareService);
     }
 
-    public function create(Channel $channel, $options)
+    public function create(Channel $channel, array $options): Queue
     {
         $queue = $channel->newQueue();
 
@@ -45,11 +37,7 @@ class QueueFactory
         return $queue;
     }
 
-    /**
-     * @param array
-     * @return int
-     */
-    private function getFlags($options): int
+    private function getFlags(array $options): int
     {
         $flags = 0;
         $flags |= $options['passive'] ? Constants::AMQP_PASSIVE : 0;

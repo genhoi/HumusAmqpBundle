@@ -30,7 +30,7 @@ class Configuration implements ConfigurationInterface
      * @param $name
      * @return ArrayNodeDefinition[]
      */
-    protected function createNodeWithArrayPrototype($name)
+    protected function createNodeWithArrayPrototype($name): array
     {
         $node = new ArrayNodeDefinition($name);
         $prototype = $node
@@ -105,7 +105,7 @@ class Configuration implements ConfigurationInterface
         return $node;
     }
 
-    protected function createQueueBindings()
+    protected function createQueueBindings(): ArrayNodeDefinition
     {
         [$exchangesNode, $exchangePrototype] = $this->createNodeWithArrayPrototype('exchanges');
         $exchangePrototype->children()
@@ -126,7 +126,7 @@ class Configuration implements ConfigurationInterface
         return $exchangesNode;
     }
 
-    protected function createExchangeBindings()
+    protected function createExchangeBindings(): ArrayNodeDefinition
     {
         [$exchangesNode, $exchangePrototype] = $this->createNodeWithArrayPrototype('exchange_bindings');
         $exchangePrototype->children()
@@ -147,7 +147,7 @@ class Configuration implements ConfigurationInterface
         return $exchangesNode;
     }
 
-    protected function createExchange() : ArrayNodeDefinition
+    protected function createExchange(): ArrayNodeDefinition
     {
         [$node, $prototype] = $this->createNodeWithArrayPrototype('exchange');
 
@@ -169,7 +169,7 @@ class Configuration implements ConfigurationInterface
         return $node;
     }
 
-    protected function createProducer() : ArrayNodeDefinition
+    protected function createProducer(): ArrayNodeDefinition
     {
         [$node, $prototype] = $this->createNodeWithArrayPrototype('producer');
 

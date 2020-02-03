@@ -15,28 +15,18 @@ class ExchangeFactory
      */
     protected $declareService;
 
-    /**
-     * QueueFactory constructor.
-     * @param FabricService $declareService
-     */
     public function __construct(FabricService $declareService)
     {
         $this->declareService = $declareService;
     }
 
-    /**
-     * @param Channel $channel
-     * @param $options
-     *
-     * @return SetupExchange
-     */
-    public function createSetup(Channel $channel, $options) : SetupExchange
+    public function createSetup(Channel $channel, array $options): SetupExchange
     {
         $exchange = $this->create($channel, $options);
         return new SetupExchange($exchange, $this->declareService);
     }
 
-    public function create(Channel $channel, $options) : Exchange
+    public function create(Channel $channel, array $options): Exchange
     {
         $exchange = $channel->newExchange();
 
@@ -48,11 +38,7 @@ class ExchangeFactory
         return $exchange;
     }
 
-    /**
-     * @param array
-     * @return int
-     */
-    private function getFlags($options): int
+    private function getFlags(array $options): int
     {
         $flags = 0;
         $flags |= $options['passive'] ? Constants::AMQP_PASSIVE : 0;

@@ -9,11 +9,7 @@ class BindingRepository
      */
     protected $bindings = [];
 
-    /**
-     * @param string $name
-     * @param Binding $binding
-     */
-    public function addBinding($name, Binding $binding)
+    public function addBinding(string $name, Binding $binding): void
     {
         $this->bindings[$name] []=  $binding;
     }
@@ -22,7 +18,7 @@ class BindingRepository
      * @param string $name
      * @return Binding[]
      */
-    public function findByName($name)
+    public function findByName(string $name): array
     {
         return $this->bindings[$name] ?? [];
     }

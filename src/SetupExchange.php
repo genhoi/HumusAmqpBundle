@@ -32,10 +32,8 @@ class SetupExchange implements Exchange
 
     /**
      * Setup exchange: declare exchange, bind to other exchange
-     *
-     * @return void
      */
-    public function setup()
+    public function setup(): void
     {
         $this->setupFabricService->setupExchange($this->exchange);
     }

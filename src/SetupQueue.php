@@ -30,7 +30,12 @@ class SetupQueue implements Queue
         $this->setupFabricService = $declareService;
     }
 
-    public function setup(bool $setupExchanges)
+    /**
+     * Setup queue: declare, bind to exchange
+     *
+     * @param bool $setupExchanges Declare related exchanges
+     */
+    public function setup(bool $setupExchanges): void
     {
         $this->setupFabricService->setupQueue($this->queue, $setupExchanges);
     }

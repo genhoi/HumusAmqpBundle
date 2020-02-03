@@ -41,6 +41,9 @@ class HumusAmqpExtension extends Extension
     const CONSUMER_TAG  = 'humus.amqp.callback_consumer';
     const PRODUCER_TAG  = 'humus.amqp.producer';
 
+    /**
+     * @var array
+     */
     protected $config;
 
     /**
@@ -79,7 +82,7 @@ class HumusAmqpExtension extends Extension
         $this->loadDeclareService();
     }
 
-    protected function loadExchangeFactory()
+    protected function loadExchangeFactory(): void
     {
         $this->container
             ->register(ExchangeFactory::class)
@@ -87,7 +90,7 @@ class HumusAmqpExtension extends Extension
             ->setArguments([new Reference(FabricService::class)]);
     }
 
-    protected function loadQueueFactory()
+    protected function loadQueueFactory(): void
     {
         $this->container
             ->register(QueueFactory::class)
@@ -95,14 +98,14 @@ class HumusAmqpExtension extends Extension
             ->setArguments([new Reference(FabricService::class)]);
     }
 
-    protected function loadConsumerFactory()
+    protected function loadConsumerFactory(): void
     {
         $this->container
             ->register(ConsumerFactory::class)
             ->setClass(ConsumerFactory::class);
     }
 
-    protected function loadProducers()
+    protected function loadProducers(): void
     {
         $producers = $this->config['producer'];
         foreach ($producers as $name => $options) {
@@ -110,7 +113,7 @@ class HumusAmqpExtension extends Extension
         }
     }
 
-    protected function loadProducer(string $name, array $options)
+    protected function loadProducer(string $name, array $options): void
     {
         $attributes = $options['attributes'];
         switch ($options['type']) {
@@ -135,11 +138,9 @@ class HumusAmqpExtension extends Extension
             ->addTag(self::PRODUCER_TAG , ['producer_name' => $name]);
 
         $this->container->setDefinition("humus.amqp.producer.$name", $definition);
-
-        return $definition;
     }
 
-    protected function loadCallbackConsumers()
+    protected function loadCallbackConsumers(): void
     {
         $consumers = $this->config['callback_consumer'];
         foreach ($consumers as $name => $options) {
@@ -147,7 +148,7 @@ class HumusAmqpExtension extends Extension
         }
     }
 
-    protected function loadConsumer(string $name, array $options)
+    protected function loadConsumer(string $name, array $options): void
     {
         $loggerDefinition = new Definition(NullLogger::class);
         if ($options['logger'] ?? false) {
@@ -187,7 +188,7 @@ class HumusAmqpExtension extends Extension
         $this->container->setDefinition("humus.amqp.callback_consumer.$name", $definition);
     }
 
-    protected function loadQueues()
+    protected function loadQueues(): void
     {
         $connections = $this->config['queue'];
         foreach ($connections as $name => $options) {
@@ -195,7 +196,7 @@ class HumusAmqpExtension extends Extension
         }
     }
 
-    protected function loadQueue(string $name, array $options)
+    protected function loadQueue(string $name, array $options): void
     {
         $definition = new Definition(Queue::class);
 
@@ -226,7 +227,7 @@ class HumusAmqpExtension extends Extension
         $this->container->setDefinition("humus.amqp.queue.$name", $definition);
     }
 
-    protected function loadExchanges()
+    protected function loadExchanges(): void
     {
         $connections = $this->config['exchange'];
         foreach ($connections as $name => $options) {
@@ -234,7 +235,7 @@ class HumusAmqpExtension extends Extension
         }
     }
 
-    protected function loadExchange($name, array $options)
+    protected function loadExchange(string $name, array $options): void
     {
         $definition = new Definition(Exchange::class);
 
@@ -264,7 +265,7 @@ class HumusAmqpExtension extends Extension
         $this->container->setDefinition("humus.amqp.exchange.$name", $definition);
     }
 
-    protected function loadConnections()
+    protected function loadConnections(): void
     {
         $driver = $this->config['driver'];
         $connections = $this->config['connection'];
@@ -280,7 +281,7 @@ class HumusAmqpExtension extends Extension
         }
     }
 
-    protected function createConnectionDefinition(string $driver, array $options)
+    protected function createConnectionDefinition(string $driver, array $options): Definition
     {
         switch ($driver) {
             case Driver::AMQP_EXTENSION:
@@ -332,7 +333,7 @@ class HumusAmqpExtension extends Extension
         return $definition;
     }
 
-    protected function loadCommands()
+    protected function loadCommands(): void
     {
         $this->container
             ->setDefinition(
@@ -372,7 +373,7 @@ class HumusAmqpExtension extends Extension
             ->addTag('console.command');
     }
 
-    protected function loadBindingRepositories()
+    protected function loadBindingRepositories(): void
     {
         $queues = $this->config['queue'];
         $queueBindingRepository = $this->container->setDefinition(
@@ -411,7 +412,7 @@ class HumusAmqpExtension extends Extension
         }
     }
 
-    protected function loadDeclareService()
+    protected function loadDeclareService(): void
     {
         $this->container->setDefinition(NullFabricTracer::class, new Definition(NullFabricTracer::class));
         $this->container->setDefinition(FabricService::class, new Definition(FabricService::class, [
