@@ -17,6 +17,7 @@ use Humus\Amqp\Queue;
 use Humus\AmqpBundle\Binding\Binding;
 use Humus\AmqpBundle\Binding\BindingRepository;
 use Humus\AmqpBundle\Command\CallbackConsumerCommand;
+use Humus\AmqpBundle\Command\DeleteFabricCommand;
 use Humus\AmqpBundle\Command\PublishMessageCommand;
 use Humus\AmqpBundle\Command\PurgeQueueCommand;
 use Humus\AmqpBundle\Command\SetupFabricCommand;
@@ -366,6 +367,15 @@ class HumusAmqpExtension extends Extension
             ->setDefinition(
                 SetupFabricCommand::class,
                 new Definition(SetupFabricCommand::class)
+            )
+            ->setArguments([
+                new Reference(FabricService::class),
+            ])
+            ->addTag('console.command');
+        $this->container
+            ->setDefinition(
+                DeleteFabricCommand::class,
+                new Definition(DeleteFabricCommand::class)
             )
             ->setArguments([
                 new Reference(FabricService::class),
