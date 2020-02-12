@@ -46,16 +46,16 @@ class Configuration implements ConfigurationInterface
         [$node, $prototype] = $this->createNodeWithArrayPrototype('connection');
 
         $prototype->children()
-            ->scalarNode('host')->isRequired()->end()
-            ->scalarNode('port')->defaultValue(5672)->end()
+            ->scalarNode('host')->defaultValue('localhost')->end()
+            ->integerNode('port')->defaultValue(5672)->end()
             ->scalarNode('login')->defaultValue('guest')->end()
             ->scalarNode('password')->defaultValue('guest')->end()
             ->scalarNode('vhost')->defaultValue('/')->end()
-            ->booleanNode('persistent')->end()
-            ->scalarNode('connect_timeout')->end()
-            ->scalarNode('read_timeout')->end()
-            ->scalarNode('write_timeout')->end()
-            ->scalarNode('heartbeat')->end()
+            ->booleanNode('persistent')->defaultFalse()->end()
+            ->floatNode('connect_timeout')->defaultValue(1.0)->end()
+            ->floatNode('read_timeout')->defaultValue(1.0)->end()
+            ->floatNode('write_timeout')->defaultValue(1.0)->end()
+            ->integerNode('heartbeat')->defaultValue(0)->end()
             ->scalarNode('type')->end()
         ->end();
 
@@ -176,7 +176,9 @@ class Configuration implements ConfigurationInterface
         $prototype->children()
             ->scalarNode('exchange')->isRequired()->end()
             ->enumNode('type')->values(['json', 'plain'])->end()
-            ->arrayNode('attributes')->variablePrototype()->end()
+            ->arrayNode('attributes')
+                ->variablePrototype()->end()
+            ->end()
         ->end();
 
         return $node;
