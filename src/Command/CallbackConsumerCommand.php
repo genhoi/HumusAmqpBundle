@@ -41,7 +41,13 @@ class CallbackConsumerCommand extends Command
             ->setDefinition([
                 new InputArgument(
                     'name',
-                    InputArgument::REQUIRED,
+                    InputArgument::OPTIONAL,
+                    'name of the consumer to start'
+                ),
+                new InputOption(
+                    'name',
+                    'c',
+                    InputOption::VALUE_REQUIRED,
                     'name of the consumer to start'
                 ),
                 new InputOption(
@@ -61,6 +67,9 @@ class CallbackConsumerCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $consumerName = $input->getArgument('name');
+        if (empty($consumerName)) {
+            $consumerName = $input->getOption('name');
+        }
 
         if (! $consumerName) {
             $output->writeln('No consumer given');
@@ -69,7 +78,7 @@ class CallbackConsumerCommand extends Command
         }
 
         if (! $this->consumers->has($consumerName)) {
-            $output->writeln('No consumer with name ' . $consumerName . ' found');
+            $output->writeln("No consumer with name '$consumerName' found");
 
             return 1;
         }

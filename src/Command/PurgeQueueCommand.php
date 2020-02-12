@@ -6,6 +6,7 @@ use Humus\Amqp\Queue;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Contracts\Service\ServiceProviderInterface;
 
@@ -43,7 +44,13 @@ class PurgeQueueCommand extends Command
             ->setDefinition([
                 new InputArgument(
                     'name',
-                    InputArgument::IS_ARRAY | InputArgument::REQUIRED,
+                    InputArgument::IS_ARRAY | InputArgument::OPTIONAL,
+                    'name of the queue to purge'
+                ),
+                new InputOption(
+                    'name',
+                    'p',
+                    InputOption::VALUE_REQUIRED,
                     'name of the queue to purge'
                 ),
             ])
@@ -53,6 +60,9 @@ class PurgeQueueCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $queueNames = $input->getArgument('name');
+        if (empty($queueNames) && $queueName = $input->getOption('name')) {
+            $queueNames = [$queueName];
+        }
         foreach ($queueNames as $name) {
             if (!$this->queues->has($name)) {
                 $output->writeln("Queue with name '$name' not found");

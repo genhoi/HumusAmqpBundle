@@ -49,7 +49,13 @@ class PublishMessageCommand extends Command
             ->setDefinition([
                 new InputArgument(
                     'producer',
-                    InputArgument::REQUIRED,
+                    InputArgument::OPTIONAL,
+                    'name of the producer to use'
+                ),
+                new InputOption(
+                    'producer',
+                    'p',
+                    InputOption::VALUE_REQUIRED,
                     'name of the producer to use'
                 ),
                 new InputOption(
@@ -102,6 +108,9 @@ class PublishMessageCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $producerName = $input->getArgument('producer');
+        if (empty($producerName)) {
+            $producerName = $input->getOption('producer');
+        }
 
         if (! $producerName) {
             $output->writeln('No producer name given');
@@ -110,7 +119,7 @@ class PublishMessageCommand extends Command
         }
 
         if (! $this->producers->has($producerName)) {
-            $output->writeln('Producer with name ' . $producerName . ' not found');
+            $output->writeln("Producer with name '$producerName' not found");
 
             return 1;
         }
