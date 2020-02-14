@@ -54,6 +54,16 @@ class HumusAmqpExtension extends Extension
      */
     protected $container;
 
+    /**
+     * @var Reference[]
+     */
+    protected $queueReferences = [];
+
+    /**
+     * @var Reference[]
+     */
+    protected $exchangeReferences = [];
+
     public function getAlias()
     {
         return 'humus';
@@ -135,8 +145,7 @@ class HumusAmqpExtension extends Extension
                 throw new \InvalidArgumentException(sprintf('Unknown producer type %s requested', $options['type']));
         }
 
-        $exchangeName = $options['exchange'];
-        $exchangeReference = new Reference("humus.amqp.exchange.$exchangeName");
+        $exchangeReference = $this->exchangeReferences[$options['exchange']];
 
         $definition = new Definition($producerClassName);
         $definition
@@ -160,9 +169,7 @@ class HumusAmqpExtension extends Extension
         $flushCallback = isset($options['flush_callback']) ? new Reference($options['flush_callback']) : null;
         $errorCallback = isset($options['error_callback']) ? new Reference($options['error_callback']) : null;;
         $deliveryCallback = new Reference($options['delivery_callback']);
-
-        $queue = "humus.amqp.queue." . $options['queue'];
-        $queueReference = new Reference($queue);
+        $queueReference = $this->queueReferences[$options['queue']];
 
         $factoryRef = new Reference(ConsumerFactory::class);
 
@@ -219,6 +226,7 @@ class HumusAmqpExtension extends Extension
             ->addTag(self::QUEUE_TAG, ['queue_name' => $queueName]);
 
         $this->container->setDefinition("humus.amqp.queue.$name", $definition);
+        $this->queueReferences[$queueName] = new Reference("humus.amqp.queue.$name");
     }
 
     protected function loadExchanges(): void
@@ -257,6 +265,7 @@ class HumusAmqpExtension extends Extension
             ->addTag(self::EXCHANGE_TAG, ['exchange_name' => $exchangeName]);
 
         $this->container->setDefinition("humus.amqp.exchange.$name", $definition);
+        $this->exchangeReferences[$exchangeName] = new Reference("humus.amqp.exchange.$name");
     }
 
     protected function loadConnections(): void
@@ -437,13 +446,11 @@ class HumusAmqpExtension extends Extension
 
     protected function loadJsonRpcClient($name, $options): void
     {
-        $queueId = "humus.amqp.queue." . $options['queue'];
-        $queueRef = new Reference($queueId);
+        $queueRef = $this->queueReferences[$options['queue']];
 
         $exchangesRef = [];
         foreach ($options['exchanges'] as $exchange) {
-            $exchangeId = "humus.amqp.exchange." . $exchange;
-            $exchangesRef[$exchange]= new Reference($exchangeId);
+            $exchangesRef[$exchange] = $this->exchangeReferences[$exchange];
         }
 
         $this->container
@@ -466,8 +473,7 @@ class HumusAmqpExtension extends Extension
 
     protected function loadJsonRpcServer($name, $options): void
     {
-        $queueId = "humus.amqp.queue." . $options['queue'];
-        $queueRef = new Reference($queueId);
+        $queueRef = $this->queueReferences[$options['queue']];
 
         $deliveryCallbackId = $options['delivery_callback'];
         $deliveryCallbackRef = new Reference($deliveryCallbackId);
