@@ -20,6 +20,8 @@ class Configuration implements ConfigurationInterface
             ->append($this->createExchange())
             ->append($this->createQueue())
             ->append($this->createProducer())
+            ->append($this->createJsonRpcClient())
+            ->append($this->createJsonRpcServer())
         ->end();
 
 
@@ -184,4 +186,38 @@ class Configuration implements ConfigurationInterface
         return $node;
     }
 
+    protected function createJsonRpcClient(): ArrayNodeDefinition
+    {
+        [$node, $prototype] = $this->createNodeWithArrayPrototype('json_rpc_client');
+
+        $prototype->children()
+            ->scalarNode('queue')->isRequired()->end()
+            ->scalarNode('wait_micros')->defaultValue(1000)->end()
+            ->scalarNode('app_id')->defaultValue('')->end()
+            ->arrayNode('exchanges')
+                ->requiresAtLeastOneElement()
+                ->isRequired()
+                ->scalarPrototype()->end()
+            ->end()
+        ->end();
+
+        return $node;
+    }
+
+    protected function createJsonRpcServer(): ArrayNodeDefinition
+    {
+        [$node, $prototype] = $this->createNodeWithArrayPrototype('json_rpc_server');
+
+        $prototype->children()
+            ->scalarNode('queue')->isRequired()->end()
+            ->scalarNode('delivery_callback')->isRequired()->end()
+            ->floatNode('idle_timeout')->isRequired()->end()
+            ->scalarNode('consumer_tag')->defaultValue('')->end()
+            ->scalarNode('app_id')->defaultValue('')->end()
+            ->booleanNode('return_trace')->defaultFalse()->end()
+            ->scalarNode('logger')->defaultNull()->end()
+        ->end();
+
+        return $node;
+    }
 }

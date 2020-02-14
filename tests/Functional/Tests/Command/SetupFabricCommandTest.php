@@ -18,11 +18,17 @@ class SetupFabricCommandTest extends TestCase
         $this->assertEquals(0, $tester->getStatusCode());
         $expectedOutput = <<<OUT
 Exchange test_exchange declared
+Exchange test_rpc_client declared
+Exchange test_rpc_server declared
 Queue test_queue declared
 Queue test_queue bind to test_exchange with routing key ''
 Queue test_queue bind to test_exchange with routing key 'key-1'
 Queue test_queue_delayed declared
 Queue test_queue_delayed bind to test_exchange with routing key 'delayed'
+Queue test_rpc_client declared
+Queue test_rpc_client bind to test_rpc_client with routing key ''
+Queue test_rpc_server declared
+Queue test_rpc_server bind to test_rpc_server with routing key ''
 Done
 
 OUT;

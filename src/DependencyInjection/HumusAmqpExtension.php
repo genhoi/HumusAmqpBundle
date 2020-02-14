@@ -12,6 +12,8 @@ use Humus\Amqp\Driver\PhpAmqpLib\SslConnection;
 use Humus\Amqp\Driver\PhpAmqpLib\StreamConnection;
 use Humus\Amqp\Exchange;
 use Humus\Amqp\JsonProducer;
+use Humus\Amqp\JsonRpc\JsonRpcClient;
+use Humus\Amqp\JsonRpc\JsonRpcServer;
 use Humus\Amqp\PlainProducer;
 use Humus\Amqp\Queue;
 use Humus\AmqpBundle\Binding\Binding;
@@ -81,6 +83,9 @@ class HumusAmqpExtension extends Extension
         $this->loadCommands();
 
         $this->loadDeclareService();
+
+        $this->loadJsonRpcClients();
+        $this->loadJsonRpcServers();
     }
 
     protected function loadExchangeFactory(): void
@@ -151,21 +156,9 @@ class HumusAmqpExtension extends Extension
 
     protected function loadConsumer(string $name, array $options): void
     {
-        $loggerDefinition = new Definition(NullLogger::class);
-        if ($options['logger'] ?? false) {
-            $loggerDefinition = new Reference($options['logger']);
-        }
-
-        $flushCallback = null;
-        if ($options['flush_callback'] ?? false) {
-            $flushCallback = new Reference($options['flush_callback']);
-        }
-
-        $errorCallback = null;
-        if ($options['error_callback'] ?? false) {
-            $errorCallback = new Reference($options['error_callback']);
-        }
-
+        $logger = isset($options['logger']) ? new Reference($options['logger']) : new Definition(NullLogger::class);
+        $flushCallback = isset($options['flush_callback']) ? new Reference($options['flush_callback']) : null;
+        $errorCallback = isset($options['error_callback']) ? new Reference($options['error_callback']) : null;;
         $deliveryCallback = new Reference($options['delivery_callback']);
 
         $queue = "humus.amqp.queue." . $options['queue'];
@@ -178,7 +171,7 @@ class HumusAmqpExtension extends Extension
             ->setFactory([$factoryRef, 'create'])
             ->setArguments([
                 $queueReference,
-                $loggerDefinition,
+                $logger,
                 $deliveryCallback,
                 $flushCallback,
                 $errorCallback,
@@ -432,5 +425,65 @@ class HumusAmqpExtension extends Extension
             new Reference('humus.amqp.binding_repository.exchange'),
             new Reference(NullFabricTracer::class),
         ]));
+    }
+
+    protected function loadJsonRpcClients(): void
+    {
+        $clients = $this->config['json_rpc_client'];
+        foreach ($clients as $name => $options) {
+            $this->loadJsonRpcClient($name, $options);
+        }
+    }
+
+    protected function loadJsonRpcClient($name, $options): void
+    {
+        $queueId = "humus.amqp.queue." . $options['queue'];
+        $queueRef = new Reference($queueId);
+
+        $exchangesRef = [];
+        foreach ($options['exchanges'] as $exchange) {
+            $exchangeId = "humus.amqp.exchange." . $exchange;
+            $exchangesRef[$exchange]= new Reference($exchangeId);
+        }
+
+        $this->container
+            ->setDefinition("humus.amqp.json_rpc_client.$name", new Definition(JsonRpcClient::class))
+            ->setArguments([
+                $queueRef,
+                $exchangesRef,
+                $options['wait_micros'],
+                $options['app_id']
+            ]);
+    }
+
+    protected function loadJsonRpcServers(): void
+    {
+        $servers = $this->config['json_rpc_server'];
+        foreach ($servers as $name => $options) {
+            $this->loadJsonRpcServer($name, $options);
+        }
+    }
+
+    protected function loadJsonRpcServer($name, $options): void
+    {
+        $queueId = "humus.amqp.queue." . $options['queue'];
+        $queueRef = new Reference($queueId);
+
+        $deliveryCallbackId = $options['delivery_callback'];
+        $deliveryCallbackRef = new Reference($deliveryCallbackId);
+
+        $logger = isset($options['logger']) ? new Reference($options['logger']) : new Definition(NullLogger::class);
+
+        $this->container
+            ->setDefinition("humus.amqp.json_rpc_server.$name", new Definition(JsonRpcServer::class))
+            ->setArguments([
+                $queueRef,
+                $deliveryCallbackRef,
+                $logger,
+                $options['idle_timeout'],
+                $options['consumer_tag'],
+                $options['app_id'],
+                $options['return_trace']
+            ]);
     }
 }

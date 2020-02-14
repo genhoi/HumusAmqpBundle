@@ -4,12 +4,15 @@ namespace HumusTest\AmqpBundle\Functional;
 
 use Humus\Amqp\Consumer;
 use Humus\Amqp\Exchange;
+use Humus\Amqp\JsonRpc\Client;
+use Humus\Amqp\JsonRpc\JsonRpcServer;
 use Humus\Amqp\Producer;
 use Humus\Amqp\Queue;
 use Humus\AmqpBundle\DependencyInjection\HumusAmqpExtension;
 use Humus\AmqpBundle\SetupFabric\FabricService;
-use HumusTest\AmqpBundle\Functional\ConsumerCallback\DeliveryCallback;
-use HumusTest\AmqpBundle\Functional\ConsumerCallback\ErrorCallback;
+use HumusTest\AmqpBundle\Functional\Callback\ConsumerDeliveryCallback;
+use HumusTest\AmqpBundle\Functional\Callback\ConsumerErrorCallback;
+use HumusTest\AmqpBundle\Functional\Callback\RpcDeliveryCallback;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -57,8 +60,9 @@ class App
     protected function loadConsumerCallback(ContainerBuilder $builder)
     {
         $builder->addDefinitions([
-            DeliveryCallback::class => new Definition(DeliveryCallback::class),
-            ErrorCallback::class => new Definition(ErrorCallback::class),
+            ConsumerDeliveryCallback::class => new Definition(ConsumerDeliveryCallback::class),
+            ConsumerErrorCallback::class => new Definition(ConsumerErrorCallback::class),
+            RpcDeliveryCallback::class => new Definition(RpcDeliveryCallback::class),
         ]);
     }
 
@@ -97,4 +101,13 @@ class App
         return App::get('humus.amqp.producer.test_producer');
     }
 
+    public static function getJsonRpcClient() : Client
+    {
+        return App::get('humus.amqp.json_rpc_client.test_rpc_client');
+    }
+
+    public static function getJsonRpcServer() : JsonRpcServer
+    {
+        return App::get('humus.amqp.json_rpc_server.test_rpc_server');
+    }
 }

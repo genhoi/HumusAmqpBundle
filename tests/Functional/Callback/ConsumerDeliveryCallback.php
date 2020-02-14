@@ -1,12 +1,12 @@
 <?php
 
-namespace HumusTest\AmqpBundle\Functional\ConsumerCallback;
+namespace HumusTest\AmqpBundle\Functional\Callback;
 
 use Humus\Amqp\DeliveryResult;
 use Humus\Amqp\Envelope;
 use Humus\Amqp\Queue;
 
-class DeliveryCallback
+class ConsumerDeliveryCallback
 {
     public function __invoke(Envelope $envelope, Queue $queue)
     {

@@ -99,8 +99,8 @@ humus:
     callback_consumer:
       test_queue_consumer:
         queue: test_queue
-        delivery_callback: HumusTest\AmqpBundle\Functional\ConsumerCallback\DeliveryCallback
-        error_callback: HumusTest\AmqpBundle\Functional\ConsumerCallback\ErrorCallback
+        delivery_callback: HumusTest\AmqpBundle\Functional\Callback\ConsumerDeliveryCallback
+        error_callback: HumusTest\AmqpBundle\Functional\Callback\ConsumerErrorCallback
         logger: monolog
         qos:
           prefetch_count: 3

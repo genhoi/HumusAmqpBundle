@@ -1,7 +1,8 @@
 <?php
 
-use HumusTest\AmqpBundle\Functional\ConsumerCallback\DeliveryCallback;
-use HumusTest\AmqpBundle\Functional\ConsumerCallback\ErrorCallback;
+use HumusTest\AmqpBundle\Functional\Callback\ConsumerDeliveryCallback;
+use HumusTest\AmqpBundle\Functional\Callback\ConsumerErrorCallback;
+use HumusTest\AmqpBundle\Functional\Callback\RpcDeliveryCallback;
 
 return [
     'humus' => [
@@ -20,6 +21,14 @@ return [
                 'test_exchange' => [
                     'connection' => 'default',
                     'durable' => true,
+                    'type' => 'direct',
+                ],
+                'test_rpc_client' => [
+                    'connection' => 'default',
+                    'type' => 'direct',
+                ],
+                'test_rpc_server' => [
+                    'connection' => 'default',
                     'type' => 'direct',
                 ],
             ],
@@ -50,12 +59,25 @@ return [
                         ],
                     ],
                 ],
+                'test_rpc_client' => [
+                    'connection' => 'default',
+                    'exchanges' => [
+                        'test_rpc_client' => [],
+                    ],
+                ],
+                'test_rpc_server' => [
+                    'connection' => 'default',
+                    'name' => 'test_rpc_server',
+                    'exchanges' => [
+                        'test_rpc_server' => [],
+                    ],
+                ],
             ],
             'callback_consumer' => [
                 'test_queue_consumer' => [
                     'queue' => 'test_queue',
-                    'delivery_callback' => DeliveryCallback::class,
-                    'error_callback' => ErrorCallback::class,
+                    'delivery_callback' => ConsumerDeliveryCallback::class,
+                    'error_callback' => ConsumerErrorCallback::class,
                     'qos' => [
                         'prefetch_count' => 3,
                         'prefetch_size' => 0,
@@ -66,6 +88,21 @@ return [
                 'test_producer' => [
                     'type' => 'json',
                     'exchange' => 'test_exchange'
+                ],
+            ],
+            'json_rpc_server' => [
+                'test_rpc_server' => [
+                    'delivery_callback' => RpcDeliveryCallback::class,
+                    'idle_timeout' => 10,
+                    'queue' => 'test_rpc_server',
+                ],
+            ],
+            'json_rpc_client' => [
+                'test_rpc_client' => [
+                    'queue' => 'test_rpc_client',
+                    'exchanges' => [
+                        'test_rpc_server'
+                    ],
                 ],
             ],
         ],
