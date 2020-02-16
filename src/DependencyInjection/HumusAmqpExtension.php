@@ -20,6 +20,7 @@ use Humus\AmqpBundle\Binding\Binding;
 use Humus\AmqpBundle\Binding\BindingRepository;
 use Humus\AmqpBundle\Command\CallbackConsumerCommand;
 use Humus\AmqpBundle\Command\DeleteFabricCommand;
+use Humus\AmqpBundle\Command\JsonRpcServerCommand;
 use Humus\AmqpBundle\Command\PublishMessageCommand;
 use Humus\AmqpBundle\Command\PurgeQueueCommand;
 use Humus\AmqpBundle\Command\SetupFabricCommand;
@@ -43,6 +44,7 @@ class HumusAmqpExtension extends Extension
     const EXCHANGE_TAG  = 'humus.amqp.exchange';
     const CONSUMER_TAG  = 'humus.amqp.callback_consumer';
     const PRODUCER_TAG  = 'humus.amqp.producer';
+    const JSON_RPC_SERVER_TAG  = 'humus.amqp.json_rpc_server';
 
     /**
      * @var array
@@ -383,6 +385,15 @@ class HumusAmqpExtension extends Extension
                 new Reference(FabricService::class),
             ])
             ->addTag('console.command');
+        $this->container
+            ->setDefinition(
+                JsonRpcServerCommand::class,
+                new Definition(JsonRpcServerCommand::class)
+            )
+            ->setArguments([
+                new ServiceLocatorArgument(new TaggedIteratorArgument(self::JSON_RPC_SERVER_TAG, 'server_name', null, true)),
+            ])
+            ->addTag('console.command');
     }
 
     protected function loadBindingRepositories(): void
@@ -490,6 +501,7 @@ class HumusAmqpExtension extends Extension
                 $options['consumer_tag'],
                 $options['app_id'],
                 $options['return_trace']
-            ]);
+            ])
+            ->addTag(self::JSON_RPC_SERVER_TAG, ['server_name' => $name]);
     }
 }
