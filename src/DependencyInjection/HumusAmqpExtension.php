@@ -83,11 +83,11 @@ class HumusAmqpExtension extends Extension
 
         $this->loadExchangeFactory();
         $this->loadExchanges();
-        $this->loadConsumerFactory();
 
         $this->loadQueueFactory();
         $this->loadQueues();
 
+        $this->loadConsumerFactory();
         $this->loadCallbackConsumers();
         $this->loadProducers();
 
@@ -228,7 +228,7 @@ class HumusAmqpExtension extends Extension
             ->addTag(self::QUEUE_TAG, ['queue_name' => $queueName]);
 
         $this->container->setDefinition("humus.amqp.queue.$name", $definition);
-        $this->queueReferences[$queueName] = new Reference("humus.amqp.queue.$name");
+        $this->queueReferences[$queueName] = $this->queueReferences[$name] = new Reference("humus.amqp.queue.$name");
     }
 
     protected function loadExchanges(): void
@@ -267,7 +267,7 @@ class HumusAmqpExtension extends Extension
             ->addTag(self::EXCHANGE_TAG, ['exchange_name' => $exchangeName]);
 
         $this->container->setDefinition("humus.amqp.exchange.$name", $definition);
-        $this->exchangeReferences[$exchangeName] = new Reference("humus.amqp.exchange.$name");
+        $this->exchangeReferences[$exchangeName] = $this->exchangeReferences[$name] = new Reference("humus.amqp.exchange.$name");
     }
 
     protected function loadConnections(): void
