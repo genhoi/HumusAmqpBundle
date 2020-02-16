@@ -393,7 +393,8 @@ class HumusAmqpExtension extends Extension
             ->setArguments([
                 new ServiceLocatorArgument(new TaggedIteratorArgument(self::JSON_RPC_SERVER_TAG, 'server_name', null, true)),
             ])
-            ->addTag('console.command');
+            ->addTag('console.command', ['command' => 'humus-amqp:json-rpc-server'])
+            ->addTag('console.command', ['command' => 'humus-amqp:json_rpc_server']);
     }
 
     protected function loadBindingRepositories(): void
