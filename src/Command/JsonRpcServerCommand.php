@@ -20,7 +20,7 @@ class JsonRpcServerCommand extends Command
 
     public static function getDefaultName()
     {
-        return 'humus-amqp:json_rpc_server';
+        return 'humus-amqp:json-rpc-server';
     }
 
     public function __construct(ServiceProviderInterface $servers)
@@ -38,6 +38,7 @@ class JsonRpcServerCommand extends Command
     {
         $this
             ->setDescription('Start a JSON-RPC server')
+            ->setAliases(['humus-amqp:json_rpc_server'])
             ->setDefinition([
                 new InputArgument(
                     'name',
