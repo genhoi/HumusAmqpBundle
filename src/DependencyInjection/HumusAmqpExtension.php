@@ -217,7 +217,7 @@ class HumusAmqpExtension extends Extension
         if (false !== strpos($connectionName, 'humus.amqp.connection.')) {
             $connectionName = str_replace('humus.amqp.connection.', '', $connectionName);
         }
-        $channelService = 'humus.amqp.channel.'.$connectionName;
+        $channelService = 'humus.amqp.queue_channel.'.$connectionName;
         $channelReference = new Reference($channelService);
 
         $queueName = $options['name'] ?? $name;
@@ -256,7 +256,7 @@ class HumusAmqpExtension extends Extension
             $connectionName = str_replace('humus.amqp.connection.', '', $connectionName);
         }
 
-        $channelService = 'humus.amqp.channel.'.$connectionName;
+        $channelService = 'humus.amqp.exchange_channel.'.$connectionName;
         $channelReference = new Reference($channelService);
 
         $exchangeName = $options['name'] ?? $name;;
@@ -279,10 +279,14 @@ class HumusAmqpExtension extends Extension
             $this->container->setDefinition("humus.amqp.connection.$name", $connectionDefinition);
 
             $connectionReference = new Reference("humus.amqp.connection.$name");
-            $channelDefinition = new Definition(Channel::class);
-            $channelDefinition->setFactory([$connectionReference, 'newChannel']);
+            $queueChannelDefinition = new Definition(Channel::class);
+            $queueChannelDefinition->setFactory([$connectionReference, 'newChannel']);
 
-            $this->container->setDefinition("humus.amqp.channel.$name", $channelDefinition);
+            $exchangeChannelDefinition = new Definition(Channel::class);
+            $exchangeChannelDefinition->setFactory([$connectionReference, 'newChannel']);
+
+            $this->container->setDefinition("humus.amqp.queue_channel.$name", $queueChannelDefinition);
+            $this->container->setDefinition("humus.amqp.exchange_channel.$name", $exchangeChannelDefinition);
         }
     }
 

@@ -19,7 +19,7 @@ class JsonRpcTest extends TestCase
         );
 
         $server = App::getJsonRpcServer();
-        $server->consume(2);
+        $server->consume(1);
 
         $responses = $client->getResponseCollection(5);
         $this->assertEquals(
