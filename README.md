@@ -38,7 +38,7 @@ public function registerBundles()
 ```
 {
     "require": {
-        "genhoi/humus-amqp-bundle": "^0.9.0",
+        "genhoi/humus-amqp-bundle": "^0.11.0",
     }
 }
 ```
@@ -68,10 +68,19 @@ humus:
         password: guest
         host: rabbitmq
         port: 5672
+        connect_timeout: 10
+        read_timeout: 10
+        write_timeout: 10
     exchange:
       test_exchange:
         connection: default
         durable: true
+        type: direct
+      test_rpc_client:
+        connection: default
+        type: direct
+      test_rpc_server:
+        connection: default
         type: direct
     queue:
       test_queue:
@@ -96,6 +105,15 @@ humus:
           test_exchange:
             routing_keys:
             - delayed
+      test_rpc_client:
+        connection: default
+        exchanges:
+          test_rpc_client: []
+      test_rpc_server:
+        connection: default
+        name: test_rpc_server
+        exchanges:
+          test_rpc_server: []
     callback_consumer:
       test_queue_consumer:
         queue: test_queue
@@ -109,4 +127,14 @@ humus:
       test_producer:
         type: json
         exchange: test_exchange
+    json_rpc_server:
+      test_rpc_server:
+        delivery_callback: HumusTest\AmqpBundle\Functional\Callback\RpcDeliveryCallback
+        idle_timeout: 10
+        queue: test_rpc_server
+    json_rpc_client:
+      test_rpc_client:
+        queue: test_rpc_client
+        exchanges:
+        - test_rpc_server
 ```
