@@ -35,7 +35,13 @@ class App
      */
     public function __construct()
     {
+        $driverEnvName = 'HUMUS_AMQP_BUNDLE_TEST_DRIVER';
+        $driverName = $_ENV[$driverEnvName] ?? getenv($driverEnvName) ?? 'amqp-extension';
+
+        $driverConfig = require __DIR__ . "/config/driver-$driverName.php";
         $humusConfig = require __DIR__ . '/config/humus_amqp.php';
+
+        $humusConfig = array_merge_recursive($driverConfig, $humusConfig);
 
         $this->container = new ContainerBuilder();
         $this->loadConsumerCallback($this->container);

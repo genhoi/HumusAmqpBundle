@@ -28,10 +28,15 @@
     "symfony/config": "^4.3 || ^5.0"
   },
   "suggest": {
-    "symfony/framework-bundle": "To use this lib as a full Symfony Bundle"
+    "symfony/framework-bundle": "To use this lib as a full Symfony Bundle",
+    "ext-pcntl": "For process control management",
+    "ext-amqp": ">= 1.9.3 For usage together with php amqp extension",
+    "php-amqplib/php-amqplib": ">= 2.7.1 For usage together with php-amqplib"
   },
   "require-dev": {
-    "phpunit/phpunit": "^8"
+    "phpunit/phpunit": "^8",
+    "ext-amqp": "*",
+    "php-amqplib/php-amqplib": "^2.7.1,<2.9.0"
   },
   "scripts": {
     "test": "vendor/bin/phpunit --bootstrap vendor/autoload.php tests"
