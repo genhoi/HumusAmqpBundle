@@ -59,6 +59,10 @@ class Configuration implements ConfigurationInterface
             ->floatNode('write_timeout')->defaultValue(1.0)->end()
             ->integerNode('heartbeat')->defaultValue(0)->end()
             ->scalarNode('type')->end()
+            ->scalarNode('cacert')->end()
+            ->scalarNode('cert')->end()
+            ->scalarNode('key')->end()
+            ->booleanNode('verify')->end()
         ->end();
 
         return $node;
