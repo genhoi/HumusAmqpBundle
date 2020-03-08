@@ -23,6 +23,7 @@ class ExchangeFactory
     public function createSetup(Channel $channel, array $options): SetupExchange
     {
         $exchange = $this->create($channel, $options);
+
         return new SetupExchange($exchange, $this->declareService);
     }
 

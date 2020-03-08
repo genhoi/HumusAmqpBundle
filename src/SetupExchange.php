@@ -21,7 +21,7 @@ class SetupExchange implements Exchange
     protected $setupFabricService;
 
     /**
-     * @param Exchange $exchange
+     * @param Exchange      $exchange
      * @param FabricService $declareService
      */
     public function __construct(Exchange $exchange, FabricService $declareService)
@@ -31,7 +31,7 @@ class SetupExchange implements Exchange
     }
 
     /**
-     * Setup exchange: declare exchange, bind to other exchange
+     * Setup exchange: declare exchange, bind to other exchange.
      */
     public function setup(): void
     {

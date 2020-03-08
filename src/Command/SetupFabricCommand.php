@@ -17,6 +17,7 @@ class SetupFabricCommand extends Command
 
     /**
      * SetupFabricCommand constructor.
+     *
      * @param FabricService $declareService
      */
     public function __construct(FabricService $declareService)
@@ -40,7 +41,6 @@ class SetupFabricCommand extends Command
             ->setDescription('Declares all AMQP exchanges and queues')
             ->setHelp('Declares all AMQP exchanges and queues');
     }
-
 
     /**
      * {@inheritdoc}

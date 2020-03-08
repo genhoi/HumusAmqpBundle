@@ -15,8 +15,7 @@ class ConsumerFactory
         ?callable $flushCallback,
         ?callable $errorCallback,
         array $options = []
-    ): CallbackConsumer
-    {
+    ): CallbackConsumer {
         $qosPrefetchSize = $options['qos']['prefetch_size'] ?? 0;
         $qosPrefetchCount = $options['qos']['prefetch_count'] ?? 3;
         $idleTimeout = $options['idle_timeout'] ?? 5.0;

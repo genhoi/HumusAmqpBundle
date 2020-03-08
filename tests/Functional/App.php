@@ -38,8 +38,8 @@ class App
         $driverEnvName = 'HUMUS_AMQP_BUNDLE_TEST_DRIVER';
         $driverName = $_ENV[$driverEnvName] ?? getenv($driverEnvName) ?? 'amqp-extension';
 
-        $driverConfig = require __DIR__ . "/config/driver-$driverName.php";
-        $humusConfig = require __DIR__ . '/config/humus_amqp.php';
+        $driverConfig = require __DIR__."/config/driver-$driverName.php";
+        $humusConfig = require __DIR__.'/config/humus_amqp.php';
 
         $humusConfig = array_merge_recursive($driverConfig, $humusConfig);
 
@@ -49,7 +49,7 @@ class App
         $this->container->loadFromExtension('humus', $humusConfig['humus']);
 
         // Set public all services
-        $this->container->addCompilerPass(new class implements CompilerPassInterface {
+        $this->container->addCompilerPass(new class() implements CompilerPassInterface {
             public function process(ContainerBuilder $container)
             {
                 $definitions = $container->getDefinitions();
@@ -57,7 +57,6 @@ class App
                     $definition->setPublic(true);
                 }
             }
-
         });
 
         $this->container->compile();
@@ -67,8 +66,8 @@ class App
     {
         $builder->addDefinitions([
             ConsumerDeliveryCallback::class => new Definition(ConsumerDeliveryCallback::class),
-            ConsumerErrorCallback::class => new Definition(ConsumerErrorCallback::class),
-            RpcDeliveryCallback::class => new Definition(RpcDeliveryCallback::class),
+            ConsumerErrorCallback::class    => new Definition(ConsumerErrorCallback::class),
+            RpcDeliveryCallback::class      => new Definition(RpcDeliveryCallback::class),
         ]);
     }
 
@@ -82,38 +81,38 @@ class App
         return self::$instance->container->get($id);
     }
 
-    public static function getFabricService() : FabricService
+    public static function getFabricService(): FabricService
     {
-        return App::get(FabricService::class);
+        return self::get(FabricService::class);
     }
 
-    public static function getTestQueue() : Queue
+    public static function getTestQueue(): Queue
     {
-        return App::get('humus.amqp.queue.test_queue');
+        return self::get('humus.amqp.queue.test_queue');
     }
 
-    public static function getTestExchange() : Exchange
+    public static function getTestExchange(): Exchange
     {
-        return App::get('humus.amqp.exchange.test_exchange');
+        return self::get('humus.amqp.exchange.test_exchange');
     }
 
-    public static function getTestQueueConsumer() : Consumer
+    public static function getTestQueueConsumer(): Consumer
     {
-        return App::get('humus.amqp.callback_consumer.test_queue_consumer');
+        return self::get('humus.amqp.callback_consumer.test_queue_consumer');
     }
 
-    public static function getTestProducer() : Producer
+    public static function getTestProducer(): Producer
     {
-        return App::get('humus.amqp.producer.test_producer');
+        return self::get('humus.amqp.producer.test_producer');
     }
 
-    public static function getJsonRpcClient() : Client
+    public static function getJsonRpcClient(): Client
     {
-        return App::get('humus.amqp.json_rpc_client.test_rpc_client');
+        return self::get('humus.amqp.json_rpc_client.test_rpc_client');
     }
 
-    public static function getJsonRpcServer() : JsonRpcServer
+    public static function getJsonRpcServer(): JsonRpcServer
     {
-        return App::get('humus.amqp.json_rpc_server.test_rpc_server');
+        return self::get('humus.amqp.json_rpc_server.test_rpc_server');
     }
 }

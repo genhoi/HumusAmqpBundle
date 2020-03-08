@@ -12,7 +12,6 @@ use Symfony\Contracts\Service\ServiceProviderInterface;
 
 class JsonRpcServerCommand extends Command
 {
-
     /**
      * @var ServiceProviderInterface
      */
@@ -29,7 +28,6 @@ class JsonRpcServerCommand extends Command
 
         parent::__construct();
     }
-
 
     /**
      * {@inheritdoc}
@@ -72,13 +70,13 @@ class JsonRpcServerCommand extends Command
             $serverName = $input->getOption('name');
         }
 
-        if (! $serverName) {
+        if (!$serverName) {
             $output->writeln('No JSON-RPC server given');
 
             return 1;
         }
 
-        if (! $this->servers->has($serverName)) {
+        if (!$this->servers->has($serverName)) {
             $output->writeln("No JSON-RPC server with name '$serverName' found");
 
             return 1;

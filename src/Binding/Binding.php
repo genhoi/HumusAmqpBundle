@@ -21,9 +21,10 @@ class Binding
 
     /**
      * Binding constructor.
-     * @param string $exchangeName
+     *
+     * @param string   $exchangeName
      * @param string[] $routingKeys
-     * @param array $args
+     * @param array    $args
      */
     public function __construct(string $exchangeName, array $routingKeys = [], array $args = [])
     {
