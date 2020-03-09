@@ -12,7 +12,14 @@ on:
 jobs:
   test:
     runs-on: ubuntu-18.04
-    container: genhoi/php-unit:7.4-ubuntu
+    strategy:
+      matrix:
+        container:
+          - genhoi/php-nginx:7.1
+          - genhoi/php-unit:7.2
+          - genhoi/php-unit:7.3
+          - genhoi/php-unit:7.4-ubuntu
+    container: ${{ matrix.container }}
     services:
       rabbitmq:
         image: rabbitmq:alpine
