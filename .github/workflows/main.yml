@@ -19,6 +19,10 @@ jobs:
           - genhoi/php-unit:7.2
           - genhoi/php-unit:7.3
           - genhoi/php-unit:7.4-ubuntu
+        driver:
+          - amqp-extension
+          - php-amqplib-stream
+          - php-amqplib-socket
     container: ${{ matrix.container }}
     services:
       rabbitmq:
@@ -29,9 +33,5 @@ jobs:
       run: composer validate
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
-    - name: Run tests on amqp-extension
-      run: export HUMUS_AMQP_BUNDLE_TEST_DRIVER=amqp-extension && composer run-script test
-    - name: Run tests on php-amqplib stream connection
-      run: export HUMUS_AMQP_BUNDLE_TEST_DRIVER=php-amqplib-stream && composer run-script test
-    - name: Run tests on php-amqplib socket connection
-      run: export HUMUS_AMQP_BUNDLE_TEST_DRIVER=php-amqplib-socket && composer run-script test
+    - name: Run tests on ${{ matrix.driver }}
+      run: export HUMUS_AMQP_BUNDLE_TEST_DRIVER=${{ matrix.driver }} && composer run-script test
