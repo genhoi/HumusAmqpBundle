@@ -7,12 +7,18 @@ use PHPUnit\Framework\TestCase;
 
 class FabricTest extends TestCase
 {
+    /**
+     * @doesNotPerformAssertions
+     */
     public function test_delete_ok()
     {
         $fabricService = App::getFabricService();
         $fabricService->delete();
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function test_setup_ok()
     {
         $fabricService = App::getFabricService();
@@ -20,6 +26,9 @@ class FabricTest extends TestCase
         $fabricService->delete();
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function test_setupQueue_ok()
     {
         $fabricService = App::getFabricService();
@@ -29,6 +38,9 @@ class FabricTest extends TestCase
         $fabricService->delete();
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function test_setupExchange_ok()
     {
         $fabricService = App::getFabricService();

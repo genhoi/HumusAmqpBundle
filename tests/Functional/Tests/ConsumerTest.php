@@ -7,6 +7,9 @@ use PHPUnit\Framework\TestCase;
 
 class ConsumerTest extends TestCase
 {
+    /**
+     * @doesNotPerformAssertions
+     */
     public function test_consumeMessage_ok()
     {
         $producer = App::getTestProducer();
