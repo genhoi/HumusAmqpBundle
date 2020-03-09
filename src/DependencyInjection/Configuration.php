@@ -24,12 +24,12 @@ class Configuration implements ConfigurationInterface
             ->append($this->createJsonRpcServer())
         ->end();
 
-
         return $humus;
     }
 
     /**
      * @param $name
+     *
      * @return ArrayNodeDefinition[]
      */
     protected function createNodeWithArrayPrototype($name): array
@@ -43,7 +43,7 @@ class Configuration implements ConfigurationInterface
         return [$node, $prototype];
     }
 
-    protected function createConnection() : ArrayNodeDefinition
+    protected function createConnection(): ArrayNodeDefinition
     {
         [$node, $prototype] = $this->createNodeWithArrayPrototype('connection');
 
@@ -68,7 +68,7 @@ class Configuration implements ConfigurationInterface
         return $node;
     }
 
-    protected function createCallbackConsumer() : ArrayNodeDefinition
+    protected function createCallbackConsumer(): ArrayNodeDefinition
     {
         [$node, $prototype] = $this->createNodeWithArrayPrototype('callback_consumer');
 
@@ -89,7 +89,7 @@ class Configuration implements ConfigurationInterface
         return $node;
     }
 
-    protected function createQueue() : ArrayNodeDefinition
+    protected function createQueue(): ArrayNodeDefinition
     {
         [$node, $prototype] = $this->createNodeWithArrayPrototype('queue');
 

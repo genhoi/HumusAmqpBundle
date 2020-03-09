@@ -10,7 +10,6 @@ use Symfony\Contracts\Service\ServiceProviderInterface;
 
 class FabricService
 {
-
     /**
      * @var ServiceProviderInterface
      */
@@ -50,7 +49,7 @@ class FabricService
         $this->tracer = $tracer;
     }
 
-    public function withTracer(FabricTracerInterface $declareTracer) : FabricService
+    public function withTracer(FabricTracerInterface $declareTracer): self
     {
         return new self(
             $this->queuesLocator,
@@ -61,7 +60,7 @@ class FabricService
         );
     }
 
-    public function setupQueue(Queue $queue, bool $setupExchanges) : void
+    public function setupQueue(Queue $queue, bool $setupExchanges): void
     {
         $queueName = $queue->getName();
 
@@ -74,11 +73,11 @@ class FabricService
 
             $arguments = $queue->getArguments();
             if (isset($arguments['x-dead-letter-exchange'])) {
-                $exchanges []= $arguments['x-dead-letter-exchange'];
+                $exchanges[] = $arguments['x-dead-letter-exchange'];
             }
 
             foreach ($bindings as $binding) {
-                $exchanges []= $binding->getExchangeName();
+                $exchanges[] = $binding->getExchangeName();
             }
 
             foreach ($exchanges as $exchangeName) {

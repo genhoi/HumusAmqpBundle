@@ -39,12 +39,11 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class HumusAmqpExtension extends Extension
 {
-
-    const QUEUE_TAG     = 'humus.amqp.queue';
-    const EXCHANGE_TAG  = 'humus.amqp.exchange';
-    const CONSUMER_TAG  = 'humus.amqp.callback_consumer';
-    const PRODUCER_TAG  = 'humus.amqp.producer';
-    const JSON_RPC_SERVER_TAG  = 'humus.amqp.json_rpc_server';
+    const QUEUE_TAG = 'humus.amqp.queue';
+    const EXCHANGE_TAG = 'humus.amqp.exchange';
+    const CONSUMER_TAG = 'humus.amqp.callback_consumer';
+    const PRODUCER_TAG = 'humus.amqp.producer';
+    const JSON_RPC_SERVER_TAG = 'humus.amqp.json_rpc_server';
 
     /**
      * @var array
@@ -152,7 +151,7 @@ class HumusAmqpExtension extends Extension
         $definition = new Definition($producerClassName);
         $definition
             ->setArguments([$exchangeReference, $attributes])
-            ->addTag(self::PRODUCER_TAG , ['producer_name' => $name]);
+            ->addTag(self::PRODUCER_TAG, ['producer_name' => $name]);
 
         $this->container->setDefinition("humus.amqp.producer.$name", $definition);
     }
@@ -169,7 +168,7 @@ class HumusAmqpExtension extends Extension
     {
         $logger = isset($options['logger']) ? new Reference($options['logger']) : new Definition(NullLogger::class);
         $flushCallback = isset($options['flush_callback']) ? new Reference($options['flush_callback']) : null;
-        $errorCallback = isset($options['error_callback']) ? new Reference($options['error_callback']) : null;;
+        $errorCallback = isset($options['error_callback']) ? new Reference($options['error_callback']) : null;
         $deliveryCallback = new Reference($options['delivery_callback']);
         $queueReference = $this->queueReferences[$options['queue']];
 
@@ -184,7 +183,7 @@ class HumusAmqpExtension extends Extension
                 $deliveryCallback,
                 $flushCallback,
                 $errorCallback,
-                $options
+                $options,
             ])
             ->addTag(self::CONSUMER_TAG, ['consumer_name' => $name]);
 
@@ -207,7 +206,7 @@ class HumusAmqpExtension extends Extension
         if ($options['auto_setup_fabric'] ?? false) {
             $definition->setFactory([$factoryRef, 'createSetup']);
             $definition->addMethodCall('setup', [
-                0 => $options['auto_setup_exchanges'] ?? false
+                0 => $options['auto_setup_exchanges'] ?? false,
             ]);
         } else {
             $definition->setFactory([$factoryRef, 'create']);
@@ -259,7 +258,7 @@ class HumusAmqpExtension extends Extension
         $channelService = 'humus.amqp.exchange_channel.'.$connectionName;
         $channelReference = new Reference($channelService);
 
-        $exchangeName = $options['name'] ?? $name;;
+        $exchangeName = $options['name'] ?? $name;
         $options['name'] = $exchangeName;
 
         $definition
@@ -298,7 +297,7 @@ class HumusAmqpExtension extends Extension
                 break;
             case Driver::PHP_AMQP_LIB:
             default:
-                if (! isset($options['type'])) {
+                if (!isset($options['type'])) {
                     throw new \InvalidArgumentException(
                         'For php-amqplib driver a connection type is required'
                     );
@@ -350,7 +349,7 @@ class HumusAmqpExtension extends Extension
                 new Definition(CallbackConsumerCommand::class)
             )
             ->setArguments([
-                new ServiceLocatorArgument(new TaggedIteratorArgument(self::CONSUMER_TAG, 'consumer_name', null, true))
+                new ServiceLocatorArgument(new TaggedIteratorArgument(self::CONSUMER_TAG, 'consumer_name', null, true)),
             ])
             ->addTag('console.command');
         $this->container
@@ -359,7 +358,7 @@ class HumusAmqpExtension extends Extension
                 new Definition(PurgeQueueCommand::class)
             )
             ->setArguments([
-                new ServiceLocatorArgument(new TaggedIteratorArgument(self::QUEUE_TAG, 'queue_name', null, true))
+                new ServiceLocatorArgument(new TaggedIteratorArgument(self::QUEUE_TAG, 'queue_name', null, true)),
             ])
             ->addTag('console.command');
         $this->container
@@ -368,7 +367,7 @@ class HumusAmqpExtension extends Extension
                 new Definition(PublishMessageCommand::class)
             )
             ->setArguments([
-                new ServiceLocatorArgument(new TaggedIteratorArgument(self::PRODUCER_TAG, 'producer_name', null, true))
+                new ServiceLocatorArgument(new TaggedIteratorArgument(self::PRODUCER_TAG, 'producer_name', null, true)),
             ])
             ->addTag('console.command');
         $this->container
@@ -475,7 +474,7 @@ class HumusAmqpExtension extends Extension
                 $queueRef,
                 $exchangesRef,
                 $options['wait_micros'],
-                $options['app_id']
+                $options['app_id'],
             ]);
     }
 
@@ -505,7 +504,7 @@ class HumusAmqpExtension extends Extension
                 $options['idle_timeout'],
                 $options['consumer_tag'],
                 $options['app_id'],
-                $options['return_trace']
+                $options['return_trace'],
             ])
             ->addTag(self::JSON_RPC_SERVER_TAG, ['server_name' => $name]);
     }

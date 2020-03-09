@@ -18,7 +18,7 @@ class DeleteFabricCommandTest extends TestCase
         $tester->execute([]);
 
         $this->assertEquals(0, $tester->getStatusCode());
-        $expectedOutput = <<<OUT
+        $expectedOutput = <<<'OUT'
 Exchange test_exchange deleted
 Exchange test_rpc_client deleted
 Exchange test_rpc_server deleted

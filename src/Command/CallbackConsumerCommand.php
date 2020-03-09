@@ -12,7 +12,6 @@ use Symfony\Contracts\Service\ServiceProviderInterface;
 
 class CallbackConsumerCommand extends Command
 {
-
     /**
      * @var ServiceProviderInterface
      */
@@ -29,7 +28,6 @@ class CallbackConsumerCommand extends Command
 
         parent::__construct();
     }
-
 
     /**
      * {@inheritdoc}
@@ -71,13 +69,13 @@ class CallbackConsumerCommand extends Command
             $consumerName = $input->getOption('name');
         }
 
-        if (! $consumerName) {
+        if (!$consumerName) {
             $output->writeln('No consumer given');
 
             return 1;
         }
 
-        if (! $this->consumers->has($consumerName)) {
+        if (!$this->consumers->has($consumerName)) {
             $output->writeln("No consumer with name '$consumerName' found");
 
             return 1;

@@ -12,7 +12,6 @@ use Symfony\Contracts\Service\ServiceProviderInterface;
 
 class PurgeQueueCommand extends Command
 {
-
     /**
      * @var ServiceProviderInterface
      */
@@ -20,6 +19,7 @@ class PurgeQueueCommand extends Command
 
     /**
      * PurgeQueueCommand constructor.
+     *
      * @param ServiceProviderInterface $queues
      */
     public function __construct(ServiceProviderInterface $queues)
@@ -66,6 +66,7 @@ class PurgeQueueCommand extends Command
         foreach ($queueNames as $name) {
             if (!$this->queues->has($name)) {
                 $output->writeln("Queue with name '$name' not found");
+
                 return 1;
             }
 

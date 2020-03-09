@@ -23,6 +23,7 @@ class QueueFactory
     public function createSetup(Channel $channel, array $options): SetupQueue
     {
         $queue = $this->create($channel, $options);
+
         return new SetupQueue($queue, $this->declareService);
     }
 

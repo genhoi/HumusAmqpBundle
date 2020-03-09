@@ -13,8 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Contracts\Service\ServiceProviderInterface;
 
 /**
- * Class PublishMessageCommand
- * @package Humus\Amqp\Console\Command
+ * Class PublishMessageCommand.
  */
 class PublishMessageCommand extends Command
 {
@@ -25,6 +24,7 @@ class PublishMessageCommand extends Command
 
     /**
      * PurgeQueueCommand constructor.
+     *
      * @param ServiceProviderInterface $producers
      */
     public function __construct(ServiceProviderInterface $producers)
@@ -112,13 +112,13 @@ class PublishMessageCommand extends Command
             $producerName = $input->getOption('producer');
         }
 
-        if (! $producerName) {
+        if (!$producerName) {
             $output->writeln('No producer name given');
 
             return 1;
         }
 
-        if (! $this->producers->has($producerName)) {
+        if (!$this->producers->has($producerName)) {
             $output->writeln("Producer with name '$producerName' not found");
 
             return 1;
@@ -192,7 +192,7 @@ class PublishMessageCommand extends Command
             try {
                 $producer->waitForConfirm(2.0);
             } catch (\Throwable $e) {
-                echo get_class($e) . ': ' . $e->getMessage();
+                echo get_class($e).': '.$e->getMessage();
 
                 return 1;
             }

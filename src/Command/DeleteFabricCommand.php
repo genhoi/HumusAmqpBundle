@@ -17,6 +17,7 @@ class DeleteFabricCommand extends Command
 
     /**
      * SetupFabricCommand constructor.
+     *
      * @param FabricService $declareService
      */
     public function __construct(FabricService $declareService)
@@ -40,7 +41,6 @@ class DeleteFabricCommand extends Command
             ->setDescription('Delete all AMQP exchanges and queues')
             ->setHelp('Delete all AMQP exchanges and queues');
     }
-
 
     /**
      * {@inheritdoc}

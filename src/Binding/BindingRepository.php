@@ -11,11 +11,12 @@ class BindingRepository
 
     public function addBinding(string $name, Binding $binding): void
     {
-        $this->bindings[$name] []=  $binding;
+        $this->bindings[$name][] = $binding;
     }
 
     /**
      * @param string $name
+     *
      * @return Binding[]
      */
     public function findByName(string $name): array

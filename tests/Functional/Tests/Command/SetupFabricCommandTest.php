@@ -16,7 +16,7 @@ class SetupFabricCommandTest extends TestCase
         $tester->execute([]);
 
         $this->assertEquals(0, $tester->getStatusCode());
-        $expectedOutput = <<<OUT
+        $expectedOutput = <<<'OUT'
 Exchange test_exchange declared
 Exchange test_rpc_client declared
 Exchange test_rpc_server declared

@@ -21,7 +21,7 @@ class SetupQueue implements Queue
     protected $setupFabricService;
 
     /**
-     * @param Queue $queue
+     * @param Queue         $queue
      * @param FabricService $declareService
      */
     public function __construct(Queue $queue, FabricService $declareService)
@@ -31,7 +31,7 @@ class SetupQueue implements Queue
     }
 
     /**
-     * Setup queue: declare, bind to exchange
+     * Setup queue: declare, bind to exchange.
      *
      * @param bool $setupExchanges Declare related exchanges
      */
