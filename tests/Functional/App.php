@@ -20,6 +20,12 @@ use Symfony\Component\DependencyInjection\Definition;
 
 class App
 {
+    private const DRIVERS = [
+        'amqp-extension',
+        'php-amqplib-socket',
+        'php-amqplib-stream',
+    ];
+
     /**
      * @var self
      */
@@ -36,7 +42,10 @@ class App
     public function __construct()
     {
         $driverEnvName = 'HUMUS_AMQP_BUNDLE_TEST_DRIVER';
-        $driverName = $_ENV[$driverEnvName] ?? getenv($driverEnvName) ?? 'amqp-extension';
+        $driverName = getenv($driverEnvName);
+        if ($driverName === false) {
+            $driverName = self::DRIVERS[0];
+        }
 
         $driverConfig = require __DIR__."/config/driver-$driverName.php";
         $humusConfig = require __DIR__.'/config/humus_amqp.php';

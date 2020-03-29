@@ -2,10 +2,6 @@
 
 ![](https://github.com/genhoi/HumusAmqpBundle/workflows/CI/badge.svg?branch=master)
 
-## Caution ##
-
-Still in development and very unstable
-
 ## About ##
 
 This bundle integrates the [HumusAmqp](https://github.com/prolic/HumusAmqp) library into Symfony.
@@ -38,7 +34,7 @@ public function registerBundles()
 ```
 {
     "require": {
-        "genhoi/humus-amqp-bundle": "^0.12.0",
+        "genhoi/humus-amqp-bundle": "^1.0.0",
     }
 }
 ```
