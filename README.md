@@ -8,13 +8,13 @@ This bundle integrates the [HumusAmqp](https://github.com/prolic/HumusAmqp) libr
 
 ## Installation ##
 
-### For Symfony Framework >= 4.3 ###
-
 Require the bundle and its dependencies with composer:
 
 ```bash
 $ composer require genhoi/humus-amqp-bundle
 ```
+
+### For Symfony Framework >= 4.3 ###
 
 Register the bundle:
 
@@ -30,14 +30,6 @@ public function registerBundles()
 ```
 
 ### For a console application that uses Symfony Console, Dependency Injection and Config components ###
-
-```
-{
-    "require": {
-        "genhoi/humus-amqp-bundle": "^1.0.0",
-    }
-}
-```
 
 Register the extension:
 
