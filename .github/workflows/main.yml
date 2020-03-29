@@ -15,7 +15,6 @@ jobs:
     strategy:
       matrix:
         container:
-          - genhoi/php-nginx:7.1
           - genhoi/php-unit:7.2
           - genhoi/php-unit:7.3
           - genhoi/php-unit:7.4-ubuntu

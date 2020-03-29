@@ -20,9 +20,9 @@
     }
   },
   "require": {
-    "php": "^7.1.3",
+    "php": "^7.2",
     "ext-json": "*",
-    "prolic/humus-amqp": "^1.4,<1.5.0",
+    "prolic/humus-amqp": "^1.5",
     "symfony/console": "^4.3 || ^5.0",
     "symfony/dependency-injection": "^4.3 || ^5.0",
     "symfony/config": "^4.3 || ^5.0"
@@ -31,12 +31,12 @@
     "symfony/framework-bundle": "To use this lib as a full Symfony Bundle",
     "ext-pcntl": "For process control management",
     "ext-amqp": ">= 1.9.3 For usage together with php amqp extension",
-    "php-amqplib/php-amqplib": ">= 2.7.1 For usage together with php-amqplib"
+    "php-amqplib/php-amqplib": ">= 2.11.0 For usage together with php-amqplib"
   },
   "require-dev": {
-    "phpunit/phpunit": "^7",
+    "phpunit/phpunit": "^8",
     "ext-amqp": "*",
-    "php-amqplib/php-amqplib": "^2.7.1,<2.9.0"
+    "php-amqplib/php-amqplib": ">=2.11.0"
   },
   "scripts": {
     "test": "vendor/bin/phpunit --bootstrap vendor/autoload.php tests"
