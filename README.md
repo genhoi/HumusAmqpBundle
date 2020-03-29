@@ -29,7 +29,7 @@ public function registerBundles()
 }
 ```
 
-### For a console application that uses Symfony Console, Dependency Injection and Config components ###
+### For application that uses Symfony Dependency Injection component ###
 
 Register the extension:
 
