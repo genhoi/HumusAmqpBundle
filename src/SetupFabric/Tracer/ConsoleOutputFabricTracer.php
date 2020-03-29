@@ -6,10 +6,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ConsoleOutputFabricTracer implements FabricTracerInterface
 {
-    /**
-     * @var OutputInterface
-     */
-    protected $output;
+    protected OutputInterface $output;
 
     public function __construct(OutputInterface $output)
     {

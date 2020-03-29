@@ -10,16 +10,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class DeleteFabricCommand extends Command
 {
-    /**
-     * @var FabricService
-     */
-    protected $setupFabricService;
+    protected FabricService $setupFabricService;
 
-    /**
-     * SetupFabricCommand constructor.
-     *
-     * @param FabricService $declareService
-     */
     public function __construct(FabricService $declareService)
     {
         $this->setupFabricService = $declareService;

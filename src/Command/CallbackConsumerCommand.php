@@ -12,10 +12,7 @@ use Symfony\Contracts\Service\ServiceProviderInterface;
 
 class CallbackConsumerCommand extends Command
 {
-    /**
-     * @var ServiceProviderInterface
-     */
-    protected $consumers;
+    protected ServiceProviderInterface $consumers;
 
     public static function getDefaultName()
     {

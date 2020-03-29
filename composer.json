@@ -20,9 +20,9 @@
     }
   },
   "require": {
-    "php": "^7.2",
+    "php": "^7.4",
     "ext-json": "*",
-    "prolic/humus-amqp": "^1.5",
+    "prolic/humus-amqp": "^2.0",
     "symfony/console": "^4.3 || ^5.0",
     "symfony/dependency-injection": "^4.3 || ^5.0",
     "symfony/config": "^4.3 || ^5.0"

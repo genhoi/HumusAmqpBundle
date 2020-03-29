@@ -5,25 +5,16 @@ namespace Humus\AmqpBundle;
 use Humus\Amqp\Channel;
 use Humus\Amqp\Connection;
 use Humus\Amqp\Constants;
+use Humus\Amqp\Envelope;
 use Humus\Amqp\Queue;
 use Humus\AmqpBundle\SetupFabric\FabricService;
 
 class SetupQueue implements Queue
 {
-    /**
-     * @var Queue
-     */
-    protected $queue;
+    protected Queue $queue;
 
-    /**
-     * @var FabricService
-     */
-    protected $setupFabricService;
+    protected FabricService $setupFabricService;
 
-    /**
-     * @param Queue         $queue
-     * @param FabricService $declareService
-     */
     public function __construct(Queue $queue, FabricService $declareService)
     {
         $this->queue = $queue;
@@ -90,7 +81,7 @@ class SetupQueue implements Queue
         $this->queue->bind($exchangeName, $routingKey, $arguments);
     }
 
-    public function get(int $flags = Constants::AMQP_NOPARAM)
+    public function get(int $flags = Constants::AMQP_NOPARAM): ?Envelope
     {
         return $this->queue->get($flags);
     }

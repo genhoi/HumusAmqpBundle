@@ -10,30 +10,15 @@ use Symfony\Contracts\Service\ServiceProviderInterface;
 
 class FabricService
 {
-    /**
-     * @var ServiceProviderInterface
-     */
-    protected $queuesLocator;
+    protected ServiceProviderInterface $queuesLocator;
 
-    /**
-     * @var ServiceProviderInterface
-     */
-    protected $exchangesLocator;
+    protected ServiceProviderInterface $exchangesLocator;
 
-    /**
-     * @var BindingRepository
-     */
-    protected $queueBindingRepository;
+    protected BindingRepository $queueBindingRepository;
 
-    /**
-     * @var BindingRepository
-     */
-    protected $exchangeBindingRepository;
+    protected BindingRepository $exchangeBindingRepository;
 
-    /**
-     * @var FabricTracerInterface
-     */
-    protected $tracer;
+    protected FabricTracerInterface $tracer;
 
     public function __construct(
         ServiceProviderInterface $queues,

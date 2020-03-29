@@ -12,21 +12,10 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Contracts\Service\ServiceProviderInterface;
 
-/**
- * Class PublishMessageCommand.
- */
 class PublishMessageCommand extends Command
 {
-    /**
-     * @var ServiceProviderInterface
-     */
-    protected $producers;
+    protected ServiceProviderInterface $producers;
 
-    /**
-     * PurgeQueueCommand constructor.
-     *
-     * @param ServiceProviderInterface $producers
-     */
     public function __construct(ServiceProviderInterface $producers)
     {
         $this->producers = $producers;

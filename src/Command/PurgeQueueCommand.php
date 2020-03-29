@@ -12,16 +12,8 @@ use Symfony\Contracts\Service\ServiceProviderInterface;
 
 class PurgeQueueCommand extends Command
 {
-    /**
-     * @var ServiceProviderInterface
-     */
-    protected $queues;
+    protected ServiceProviderInterface $queues;
 
-    /**
-     * PurgeQueueCommand constructor.
-     *
-     * @param ServiceProviderInterface $queues
-     */
     public function __construct(ServiceProviderInterface $queues)
     {
         $this->queues = $queues;

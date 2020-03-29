@@ -10,20 +10,10 @@ use Humus\AmqpBundle\SetupFabric\FabricService;
 
 class SetupExchange implements Exchange
 {
-    /**
-     * @var Exchange
-     */
-    protected $exchange;
+    protected Exchange $exchange;
 
-    /**
-     * @var FabricService
-     */
-    protected $setupFabricService;
+    protected FabricService $setupFabricService;
 
-    /**
-     * @param Exchange      $exchange
-     * @param FabricService $declareService
-     */
     public function __construct(Exchange $exchange, FabricService $declareService)
     {
         $this->exchange = $exchange;
@@ -43,7 +33,7 @@ class SetupExchange implements Exchange
         return $this->exchange->getName();
     }
 
-    public function setName(string $exchangeName)
+    public function setName(string $exchangeName): void
     {
         $this->exchange->setName($exchangeName);
     }
@@ -53,7 +43,7 @@ class SetupExchange implements Exchange
         return $this->exchange->getType();
     }
 
-    public function setType(string $exchangeType)
+    public function setType(string $exchangeType): void
     {
         $this->exchange->setType($exchangeType);
     }
@@ -63,7 +53,7 @@ class SetupExchange implements Exchange
         return $this->exchange->getFlags();
     }
 
-    public function setFlags(int $flags)
+    public function setFlags(int $flags): void
     {
         $this->exchange->setFlags($flags);
     }
@@ -78,37 +68,37 @@ class SetupExchange implements Exchange
         return $this->exchange->getArguments();
     }
 
-    public function setArgument(string $key, $value)
+    public function setArgument(string $key, $value): void
     {
         $this->exchange->setArgument($key, $value);
     }
 
-    public function setArguments(array $arguments)
+    public function setArguments(array $arguments): void
     {
         $this->exchange->setArguments($arguments);
     }
 
-    public function declareExchange()
+    public function declareExchange(): void
     {
         $this->exchange->declareExchange();
     }
 
-    public function delete(string $exchangeName = '', int $flags = Constants::AMQP_NOPARAM)
+    public function delete(string $exchangeName = '', int $flags = Constants::AMQP_NOPARAM): void
     {
         $this->exchange->delete($exchangeName, $flags);
     }
 
-    public function bind(string $exchangeName, string $routingKey = '', array $arguments = [])
+    public function bind(string $exchangeName, string $routingKey = '', array $arguments = []): void
     {
         $this->exchange->bind($exchangeName, $routingKey, $arguments);
     }
 
-    public function unbind(string $exchangeName, string $routingKey = '', array $arguments = [])
+    public function unbind(string $exchangeName, string $routingKey = '', array $arguments = []): void
     {
         $this->exchange->unbind($exchangeName, $routingKey, $arguments);
     }
 
-    public function publish(string $message, string $routingKey = '', int $flags = Constants::AMQP_NOPARAM, array $attributes = [])
+    public function publish(string $message, string $routingKey = '', int $flags = Constants::AMQP_NOPARAM, array $attributes = []): void
     {
         $this->exchange->publish($message, $routingKey, $flags, $attributes);
     }

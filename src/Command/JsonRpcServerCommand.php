@@ -12,10 +12,7 @@ use Symfony\Contracts\Service\ServiceProviderInterface;
 
 class JsonRpcServerCommand extends Command
 {
-    /**
-     * @var ServiceProviderInterface
-     */
-    protected $servers;
+    protected ServiceProviderInterface $servers;
 
     public static function getDefaultName()
     {

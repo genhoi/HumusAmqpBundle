@@ -10,21 +10,18 @@ use Humus\AmqpBundle\SetupFabric\FabricService;
 
 class ExchangeFactory
 {
-    /**
-     * @var FabricService
-     */
-    protected $declareService;
+    protected FabricService $fabricService;
 
-    public function __construct(FabricService $declareService)
+    public function __construct(FabricService $fabricService)
     {
-        $this->declareService = $declareService;
+        $this->fabricService = $fabricService;
     }
 
     public function createSetup(Channel $channel, array $options): SetupExchange
     {
         $exchange = $this->create($channel, $options);
 
-        return new SetupExchange($exchange, $this->declareService);
+        return new SetupExchange($exchange, $this->fabricService);
     }
 
     public function create(Channel $channel, array $options): Exchange

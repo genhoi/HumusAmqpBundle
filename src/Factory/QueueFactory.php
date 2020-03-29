@@ -10,21 +10,18 @@ use Humus\AmqpBundle\SetupQueue;
 
 class QueueFactory
 {
-    /**
-     * @var FabricService
-     */
-    protected $declareService;
+    protected FabricService $fabricService;
 
-    public function __construct(FabricService $declareService)
+    public function __construct(FabricService $fabricService)
     {
-        $this->declareService = $declareService;
+        $this->fabricService = $fabricService;
     }
 
     public function createSetup(Channel $channel, array $options): SetupQueue
     {
         $queue = $this->create($channel, $options);
 
-        return new SetupQueue($queue, $this->declareService);
+        return new SetupQueue($queue, $this->fabricService);
     }
 
     public function create(Channel $channel, array $options): Queue
