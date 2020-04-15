@@ -1,6 +1,7 @@
 #  HumusAmqpBundle #
 
 ![](https://github.com/genhoi/HumusAmqpBundle/workflows/CI/badge.svg?branch=master)
+![](https://codecov.io/gh/genhoi/HumusAmqpBundle/branch/master/graphs/badge.svg?branch=master)
 
 ## About ##
 
