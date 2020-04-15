@@ -39,6 +39,7 @@
     "php-amqplib/php-amqplib": ">=2.11.0"
   },
   "scripts": {
-    "test": "vendor/bin/phpunit --bootstrap vendor/autoload.php tests"
+    "test": "vendor/bin/phpunit --bootstrap vendor/autoload.php tests",
+    "coverage": "vendor/bin/phpunit --bootstrap vendor/autoload.php --coverage-clover=coverage.xml --whitelist=src tests"
   }
 }
