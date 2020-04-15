@@ -32,3 +32,24 @@ jobs:
       run: export HUMUS_AMQP_BUNDLE_TEST_DRIVER=php-amqplib-stream && composer run-script test
     - name: Run tests on php-amqplib socket connection
       run: export HUMUS_AMQP_BUNDLE_TEST_DRIVER=php-amqplib-socket && composer run-script test
+
+  coverage:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        container:
+          - genhoi/php-unit:7.4-ubuntu-debug
+    container: ${{ matrix.container }}
+    services:
+      rabbitmq:
+        image: rabbitmq:alpine
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+      - name: Install git
+        run: apt update && apt install -y git
+      - name: Run tests on amqp-extension
+        run: export HUMUS_AMQP_BUNDLE_TEST_DRIVER=amqp-extension && composer run-script coverage
+      - name: Codecov
+        uses: codecov/codecov-action@v1.0.6
