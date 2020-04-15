@@ -57,8 +57,8 @@ class FabricService
             $exchanges = [];
 
             $arguments = $queue->getArguments();
-            if (isset($arguments['x-dead-letter-exchange'])) {
-                $exchanges[] = $arguments['x-dead-letter-exchange'];
+            if (isset($arguments['x_dead_letter_exchange'])) {
+                $exchanges[] = $arguments['x_dead_letter_exchange'];
             }
 
             foreach ($bindings as $binding) {
@@ -87,9 +87,9 @@ class FabricService
         $this->tracer->declaredExchange($exchangeName);
 
         $arguments = $exchange->getArguments();
-        if (isset($arguments['alternate-exchange'])) {
+        if (isset($arguments['alternate_exchange'])) {
             // auto setup fabric alternate exchange
-            $alternateExchange = $this->exchangesLocator->get($arguments['alternate-exchange']);
+            $alternateExchange = $this->exchangesLocator->get($arguments['alternate_exchange']);
             $this->setupExchange($alternateExchange);
         }
         $bindings = $this->exchangeBindingRepository->findByName($exchangeName);
