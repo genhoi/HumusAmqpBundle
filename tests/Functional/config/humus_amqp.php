@@ -21,6 +21,12 @@ return [
                     'connection' => 'default',
                     'type'       => 'direct',
                 ],
+                'auto_setup_exchange' => [
+                    'connection'        => 'default',
+                    'type'              => 'direct',
+                    'durable'           => true,
+                    'auto_setup_fabric' => true,
+                ],
             ],
             'queue' => [
                 'test_queue' => [
