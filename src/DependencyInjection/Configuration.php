@@ -35,10 +35,11 @@ class Configuration implements ConfigurationInterface
     protected function createNodeWithArrayPrototype($name): array
     {
         $node = new ArrayNodeDefinition($name);
-        $prototype = $node
+        $node
+            ->normalizeKeys(false)
             ->useAttributeAsKey('key')
-            ->canBeUnset()
-            ->arrayPrototype();
+            ->canBeUnset();
+        $prototype = $node->arrayPrototype();
 
         return [$node, $prototype];
     }
