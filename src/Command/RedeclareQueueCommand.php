@@ -2,23 +2,18 @@
 
 namespace Humus\AmqpBundle\Command;
 
-use Humus\Amqp\Connection;
 use Humus\Amqp\Constants;
+use Humus\Amqp\Queue;
 use Humus\AmqpBundle\Binding\BindingRepository;
 use Humus\AmqpBundle\SetupFabric\FabricService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Contracts\Service\ServiceProviderInterface;
 
 class RedeclareQueueCommand extends Command
 {
-    /**
-     * @var ServiceProviderInterface
-     */
-    protected $connections;
 
     /**
      * @var ServiceProviderInterface
@@ -36,12 +31,10 @@ class RedeclareQueueCommand extends Command
     protected $fabric;
 
     public function __construct(
-        ServiceProviderInterface $connections,
         ServiceProviderInterface $queues,
         BindingRepository $queueBindingRepository,
         FabricService $fabric
     ) {
-        $this->connections = $connections;
         $this->queues = $queues;
         $this->queueBindingRepository = $queueBindingRepository;
         $this->fabric = $fabric;
@@ -69,13 +62,6 @@ EOF;
             InputArgument::REQUIRED,
             'Queue name'
         );
-        $this->addOption(
-            'connection',
-            'c',
-            InputOption::VALUE_REQUIRED,
-            'Connection name',
-            'default'
-        );
 
         parent::configure();
     }
@@ -88,22 +74,17 @@ EOF;
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $connectionName = $input->getOption('connection');
         $queueName = $input->getArgument('queue');
         $tmpQueueName = $queueName.'_tmp_'.uniqid();
 
-        if (!$this->connections->has($connectionName)) {
-            $output->writeln("Connection with name '$connectionName' not found");
-
-            return 1;
-        }
         if (!$this->queues->has($queueName)) {
             $output->writeln("Queue with name '$queueName' not found");
 
             return 1;
         }
+        $queue = $this->queues->get($queueName); /** @var Queue $queue */
 
-        $connection = $this->connections->get($connectionName); /** @var Connection $connection */
+        $connection = $queue->getConnection();
         $channel = $connection->newChannel();
         $tmpQueue = $channel->newQueue();
         $tmpQueue->setName($tmpQueueName);
@@ -128,9 +109,6 @@ EOF;
             }
         }
 
-        $channel = $connection->newChannel();
-        $queue = $channel->newQueue();
-        $queue->setName($queueName);
         foreach ($bindings as $binding) {
             foreach ($binding->getRoutingKeys() as $routingKey) {
                 $queue->unbind($binding->getExchangeName(), $routingKey, $binding->getArgs());
@@ -147,7 +125,6 @@ EOF;
         $queue->delete();
         $output->writeln("Delete queue {$queue->getName()}");
 
-        $queue = $this->queues->get($queueName);
         $this->fabric->setupQueue($queue, false);
         $output->writeln("Setup queue {$queue->getName()}");
 
