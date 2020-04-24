@@ -102,9 +102,7 @@ class Configuration implements ConfigurationInterface
             ->booleanNode('auto_delete')->defaultFalse()->end()
             ->booleanNode('auto_setup_fabric')->defaultFalse()->end()
             ->booleanNode('auto_setup_exchanges')->defaultFalse()->end()
-            ->arrayNode('arguments')->defaultValue([])
-                ->prototype('scalar')->end()
-            ->end()
+            ->variableNode('arguments')->end()
             ->append($this->createQueueBindings())
         ->end();
 
@@ -120,11 +118,7 @@ class Configuration implements ConfigurationInterface
                 ->defaultValue([''])
                 ->prototype('scalar')->end()
             ->end()
-            ->arrayNode('bind_arguments')
-                ->canBeUnset()
-                ->defaultValue([])
-                ->prototype('scalar')->end()
-            ->end()
+            ->variableNode('bind_arguments')->end()
         ->end();
 
         $exchangesNode->canBeUnset();
@@ -138,14 +132,8 @@ class Configuration implements ConfigurationInterface
         $exchangePrototype->children()
             ->arrayNode('routing_keys')
                 ->canBeUnset()
-                ->defaultValue([])
-                ->prototype('scalar')->end()
             ->end()
-            ->arrayNode('bind_arguments')
-                ->canBeUnset()
-                ->defaultValue([])
-                ->prototype('scalar')->end()
-            ->end()
+            ->variableNode('bind_arguments')->end()
         ->end();
 
         $exchangesNode->canBeUnset();
@@ -159,9 +147,7 @@ class Configuration implements ConfigurationInterface
 
         $prototype->children()
             ->scalarNode('name')->defaultNull()->end()
-            ->arrayNode('arguments')->defaultValue([])
-                ->prototype('scalar')->end()
-            ->end()
+            ->variableNode('arguments')->end()
             ->booleanNode('auto_delete')->defaultFalse()->end()
             ->booleanNode('passive')->defaultFalse()->end()
             ->booleanNode('durable')->defaultTrue()->end()
@@ -182,9 +168,7 @@ class Configuration implements ConfigurationInterface
         $prototype->children()
             ->scalarNode('exchange')->isRequired()->end()
             ->enumNode('type')->values(['json', 'plain'])->end()
-            ->arrayNode('attributes')
-                ->variablePrototype()->end()
-            ->end()
+            ->variableNode('attributes')->end()
         ->end();
 
         return $node;

@@ -33,7 +33,7 @@ class QueueFactory
 
         $queue->setName($options['name'] ?? '');
         $queue->setFlags($this->getFlags($options));
-        $queue->setArguments($options['arguments']);
+        $queue->setArguments($options['arguments'] ?? []);
 
         return $queue;
     }

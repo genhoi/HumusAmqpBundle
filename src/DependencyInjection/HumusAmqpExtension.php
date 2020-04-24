@@ -132,7 +132,7 @@ class HumusAmqpExtension extends Extension
 
     protected function loadProducer(string $name, array $options): void
     {
-        $attributes = $options['attributes'];
+        $attributes = $options['attributes'] ?? [];
         switch ($options['type']) {
             case 'json':
             case JsonProducer::class:
@@ -413,8 +413,8 @@ class HumusAmqpExtension extends Extension
             foreach ($options['exchanges'] as $exchangeName => $exchangeOptions) {
                 $bindingDefinition = new Definition(Binding::class, [
                     $exchangeName,
-                    $exchangeOptions['routing_keys'],
-                    $exchangeOptions['bind_arguments'],
+                    $exchangeOptions['routing_keys'] ?? [],
+                    $exchangeOptions['bind_arguments'] ?? [],
                 ]);
                 $queueBindingRepository->addMethodCall('addBinding', [$queueName, $bindingDefinition]);
             }
@@ -431,8 +431,8 @@ class HumusAmqpExtension extends Extension
             foreach ($options['exchange_bindings'] as $bindExchangeName => $exchangeOptions) {
                 $bindingDefinition = new Definition(Binding::class, [
                     $bindExchangeName,
-                    $exchangeOptions['routing_keys'],
-                    $exchangeOptions['bind_arguments'],
+                    $exchangeOptions['routing_keys'] ?? [],
+                    $exchangeOptions['bind_arguments'] ?? [],
                 ]);
                 $exchangeBindingRepository->addMethodCall('addBinding', [$exchangeName, $bindingDefinition]);
             }
