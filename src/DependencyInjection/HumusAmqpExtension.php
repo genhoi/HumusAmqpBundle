@@ -407,7 +407,6 @@ class HumusAmqpExtension extends Extension
                 new Definition(RedeclareQueueCommand::class)
             )
             ->setArguments([
-                new ServiceLocatorArgument(new TaggedIteratorArgument(self::CONNECTION_TAG, 'connection_name', null, true)),
                 new ServiceLocatorArgument(new TaggedIteratorArgument(self::QUEUE_TAG, 'queue_name', null, true)),
                 new Reference('humus.amqp.binding_repository.queue'),
                 new Reference(FabricService::class),
