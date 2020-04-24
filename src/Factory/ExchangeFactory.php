@@ -28,7 +28,7 @@ class ExchangeFactory
     {
         $exchange = $channel->newExchange();
 
-        $exchange->setArguments($options['arguments']);
+        $exchange->setArguments($options['arguments'] ?? []);
         $exchange->setName($options['name']);
         $exchange->setFlags($this->getFlags($options));
         $exchange->setType($options['type']);

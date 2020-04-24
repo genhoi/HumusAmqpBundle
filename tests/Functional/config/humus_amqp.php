@@ -13,6 +13,11 @@ return [
                     'durable'    => true,
                     'type'       => 'direct',
                 ],
+                'test-exchange' => [
+                    'connection' => 'default',
+                    'durable'    => true,
+                    'type'       => 'direct',
+                ],
                 'test_rpc_client' => [
                     'connection' => 'default',
                     'type'       => 'direct',
@@ -40,6 +45,21 @@ return [
                     ],
                     'exchanges' => [
                         'test_exchange' => [
+                            'routing_keys' => ['', 'key-1'],
+                        ],
+                    ],
+                ],
+                'test-queue' => [
+                    'connection'           => 'default',
+                    'durable'              => true,
+                    'auto_setup_fabric'    => true,
+                    'auto_setup_exchanges' => true,
+                    'arguments'            => [
+                        'x-dead-letter-exchange'    => 'test-exchange',
+                        'x-dead-letter-routing-key' => 'delayed',
+                    ],
+                    'exchanges' => [
+                        'test-exchange' => [
                             'routing_keys' => ['', 'key-1'],
                         ],
                     ],
