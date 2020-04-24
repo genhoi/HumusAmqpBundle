@@ -41,7 +41,7 @@ class RedeclareQueueCommand extends Command
 
     protected function configure()
     {
-        $help = <<<EOF
+        $help = <<<'EOF'
 Redeclare queue command
 EOF;
 
@@ -70,14 +70,12 @@ EOF;
      * @param OutputInterface $output
      *
      * @return int
-     *
-     * @throws \Throwable
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $connectionName = $input->getOption('connection');
         $queueName = $input->getArgument('queue');
-        $tmpQueueName = $queueName . '_tmp_'.uniqid();
+        $tmpQueueName = $queueName.'_tmp_'.uniqid();
 
 
         if (!$this->connections->has($connectionName)) {
@@ -92,7 +90,6 @@ EOF;
         }
 
         $connection = $this->connections->get($connectionName); /** @var Connection $connection */
-
         $channel = $connection->newChannel();
         $tmpQueue = $channel->newQueue();
         $tmpQueue->setName($tmpQueueName);
