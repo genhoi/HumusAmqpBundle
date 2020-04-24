@@ -66,7 +66,7 @@ EOF;
     }
 
     /**
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      *
      * @return int
@@ -76,7 +76,6 @@ EOF;
         $connectionName = $input->getOption('connection');
         $queueName = $input->getArgument('queue');
         $tmpQueueName = $queueName.'_tmp_'.uniqid();
-
 
         if (!$this->connections->has($connectionName)) {
             $output->writeln("Connection with name '$connectionName' not found");
