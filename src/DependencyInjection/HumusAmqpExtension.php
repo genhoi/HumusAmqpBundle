@@ -23,6 +23,7 @@ use Humus\AmqpBundle\Command\DeleteFabricCommand;
 use Humus\AmqpBundle\Command\JsonRpcServerCommand;
 use Humus\AmqpBundle\Command\PublishMessageCommand;
 use Humus\AmqpBundle\Command\PurgeQueueCommand;
+use Humus\AmqpBundle\Command\RedeclareQueueCommand;
 use Humus\AmqpBundle\Command\SetupFabricCommand;
 use Humus\AmqpBundle\Factory\ConsumerFactory;
 use Humus\AmqpBundle\Factory\ExchangeFactory;
@@ -44,6 +45,7 @@ class HumusAmqpExtension extends Extension
     const CONSUMER_TAG = 'humus.amqp.callback_consumer';
     const PRODUCER_TAG = 'humus.amqp.producer';
     const JSON_RPC_SERVER_TAG = 'humus.amqp.json_rpc_server';
+    const CONNECTION_TAG = 'humus.amqp.connection';
 
     /**
      * @var array
@@ -275,6 +277,8 @@ class HumusAmqpExtension extends Extension
         $connections = $this->config['connection'];
         foreach ($connections as $name => $options) {
             $connectionDefinition = $this->createConnectionDefinition($driver, $options);
+            $connectionDefinition->addTag(self::CONNECTION_TAG, ['connection_name' => $name]);
+
             $this->container->setDefinition("humus.amqp.connection.$name", $connectionDefinition);
 
             $connectionReference = new Reference("humus.amqp.connection.$name");
@@ -396,8 +400,19 @@ class HumusAmqpExtension extends Extension
             ->setArguments([
                 new ServiceLocatorArgument(new TaggedIteratorArgument(self::JSON_RPC_SERVER_TAG, 'server_name', null, true)),
             ])
-            ->addTag('console.command', ['command' => 'humus-amqp:json-rpc-server'])
-            ->addTag('console.command', ['command' => 'humus-amqp:json_rpc_server']);
+            ->addTag('console.command');
+        $this->container
+            ->setDefinition(
+                RedeclareQueueCommand::class,
+                new Definition(RedeclareQueueCommand::class)
+            )
+            ->setArguments([
+                new ServiceLocatorArgument(new TaggedIteratorArgument(self::CONNECTION_TAG, 'connection_name', null, true)),
+                new ServiceLocatorArgument(new TaggedIteratorArgument(self::QUEUE_TAG, 'queue_name', null, true)),
+                new Reference('humus.amqp.binding_repository.queue'),
+                new Reference(FabricService::class),
+            ])
+            ->addTag('console.command');
     }
 
     protected function loadBindingRepositories(): void
