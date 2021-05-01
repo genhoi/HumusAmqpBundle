@@ -71,7 +71,6 @@ EOF;
             return 1;
         }
         $queue = $this->queues->get($queueName); /** @var Queue $queue */
-
         $connection = $queue->getConnection();
         $channel = $connection->newChannel();
         $tmpQueue = $channel->newQueue();
