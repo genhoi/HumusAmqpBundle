@@ -11,7 +11,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         container:
@@ -34,7 +34,7 @@ jobs:
       run: export HUMUS_AMQP_BUNDLE_TEST_DRIVER=php-amqplib-socket && composer run-script test
 
   coverage:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         container:
