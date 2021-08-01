@@ -20,7 +20,7 @@
     }
   },
   "require": {
-    "php": "^7.4",
+    "php": "^7.4 || ^8.0",
     "ext-json": "*",
     "prolic/humus-amqp": "^2.0",
     "symfony/console": "^4.3 || ^5.0",
