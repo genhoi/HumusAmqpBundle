@@ -16,6 +16,7 @@ jobs:
       matrix:
         container:
           - genhoi/php-unit:7.4-ubuntu
+          - genhoi/php-unit:8.0-ubuntu
     container: ${{ matrix.container }}
     services:
       rabbitmq:
