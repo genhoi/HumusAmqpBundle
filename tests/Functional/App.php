@@ -24,6 +24,7 @@ class App
         'amqp-extension',
         'php-amqplib-socket',
         'php-amqplib-stream',
+        'php-amqplib-stream-with-heartbeat',
     ];
 
     /**

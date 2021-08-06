@@ -4,12 +4,7 @@ namespace Humus\AmqpBundle\DependencyInjection;
 
 use Humus\Amqp\CallbackConsumer;
 use Humus\Amqp\Channel;
-use Humus\Amqp\Driver\Driver;
-use Humus\Amqp\Driver\PhpAmqpLib\LazyConnection;
-use Humus\Amqp\Driver\PhpAmqpLib\LazySocketConnection;
-use Humus\Amqp\Driver\PhpAmqpLib\SocketConnection;
-use Humus\Amqp\Driver\PhpAmqpLib\SslConnection;
-use Humus\Amqp\Driver\PhpAmqpLib\StreamConnection;
+use Humus\Amqp\Connection;
 use Humus\Amqp\Exchange;
 use Humus\Amqp\JsonProducer;
 use Humus\Amqp\JsonRpc\JsonRpcClient;
@@ -25,6 +20,7 @@ use Humus\AmqpBundle\Command\PublishMessageCommand;
 use Humus\AmqpBundle\Command\PurgeQueueCommand;
 use Humus\AmqpBundle\Command\RedeclareQueueCommand;
 use Humus\AmqpBundle\Command\SetupFabricCommand;
+use Humus\AmqpBundle\Factory\ConnectionFactory;
 use Humus\AmqpBundle\Factory\ConsumerFactory;
 use Humus\AmqpBundle\Factory\ExchangeFactory;
 use Humus\AmqpBundle\Factory\QueueFactory;
@@ -273,10 +269,17 @@ class HumusAmqpExtension extends Extension
 
     protected function loadConnections(): void
     {
+        $this->container
+            ->register(ConnectionFactory::class)
+            ->setClass(ConnectionFactory::class);
+        $factoryRef = new Reference(ConnectionFactory::class);
+
         $driver = $this->config['driver'];
         $connections = $this->config['connection'];
         foreach ($connections as $name => $options) {
-            $connectionDefinition = $this->createConnectionDefinition($driver, $options);
+            $connectionDefinition = new Definition(Connection::class);
+            $connectionDefinition->setFactory([$factoryRef, 'create']);
+            $connectionDefinition->setArguments([$driver, $options]);
             $connectionDefinition->addTag(self::CONNECTION_TAG, ['connection_name' => $name]);
 
             $this->container->setDefinition("humus.amqp.connection.$name", $connectionDefinition);
@@ -291,58 +294,6 @@ class HumusAmqpExtension extends Extension
             $this->container->setDefinition("humus.amqp.queue_channel.$name", $queueChannelDefinition);
             $this->container->setDefinition("humus.amqp.exchange_channel.$name", $exchangeChannelDefinition);
         }
-    }
-
-    protected function createConnectionDefinition(string $driver, array $options): Definition
-    {
-        switch ($driver) {
-            case Driver::AMQP_EXTENSION:
-                $className = \Humus\Amqp\Driver\AmqpExtension\Connection::class;
-                break;
-            case Driver::PHP_AMQP_LIB:
-            default:
-                if (!isset($options['type'])) {
-                    throw new \InvalidArgumentException(
-                        'For php-amqplib driver a connection type is required'
-                    );
-                }
-                $type = $options['type'];
-                unset($options['type']);
-                switch ($type) {
-                    case 'lazy':
-                    case LazyConnection::class:
-                        $className = LazyConnection::class;
-                        break;
-                    case 'lazy_socket':
-                    case LazySocketConnection::class:
-                        $className = LazySocketConnection::class;
-                        break;
-                    case 'socket':
-                    case SocketConnection::class:
-                        $className = SocketConnection::class;
-                        break;
-                    case 'ssl':
-                    case SslConnection::class:
-                        $className = SslConnection::class;
-                        break;
-                    case 'stream':
-                    case StreamConnection::class:
-                        $className = StreamConnection::class;
-                        break;
-                    default:
-                        throw new \InvalidArgumentException(
-                            'Invalid connection type for php-amqplib driver given'
-                        );
-                }
-                break;
-        }
-
-        $definition = new Definition($className, [$options]);
-        if ($driver === Driver::AMQP_EXTENSION) {
-            $definition->addMethodCall('connect');
-        }
-
-        return $definition;
     }
 
     protected function loadCommands(): void

@@ -59,12 +59,12 @@ class Configuration implements ConfigurationInterface
             ->floatNode('read_timeout')->defaultValue(1.0)->end()
             ->floatNode('write_timeout')->defaultValue(1.0)->end()
             ->integerNode('heartbeat')->defaultValue(0)->end()
-            ->booleanNode('register_pcntl_heartbeat_sender')->defaultFalse()->end()
             ->scalarNode('type')->end()
             ->scalarNode('cacert')->end()
             ->scalarNode('cert')->end()
             ->scalarNode('key')->end()
             ->booleanNode('verify')->end()
+            ->booleanNode('register_pcntl_heartbeat_sender')->end()
         ->end();
 
         return $node;
