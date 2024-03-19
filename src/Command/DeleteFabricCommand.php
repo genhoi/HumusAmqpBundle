@@ -19,7 +19,7 @@ class DeleteFabricCommand extends Command
         parent::__construct();
     }
 
-    public static function getDefaultName()
+    public static function getDefaultName(): ?string
     {
         return 'humus-amqp:delete-fabric';
     }
@@ -37,7 +37,7 @@ class DeleteFabricCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->setupFabricService
             ->withTracer(new ConsoleOutputFabricTracer($output))

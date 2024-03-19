@@ -23,7 +23,7 @@ class PublishMessageCommand extends Command
         parent::__construct();
     }
 
-    public static function getDefaultName()
+    public static function getDefaultName(): ?string
     {
         return 'humus-amqp:publish-message';
     }
@@ -94,7 +94,7 @@ class PublishMessageCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $producerName = $input->getArgument('producer');
         if (empty($producerName)) {
