@@ -14,7 +14,7 @@ class CallbackConsumerCommand extends Command
 {
     protected ServiceProviderInterface $consumers;
 
-    public static function getDefaultName()
+    public static function getDefaultName(): ?string
     {
         return 'humus-amqp:consumer';
     }
@@ -59,7 +59,7 @@ class CallbackConsumerCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $consumerName = $input->getArgument('name');
         if (empty($consumerName)) {

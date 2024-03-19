@@ -30,7 +30,7 @@ class RedeclareQueueCommand extends Command
         parent::__construct();
     }
 
-    public static function getDefaultName()
+    public static function getDefaultName(): ?string
     {
         return 'humus-amqp:redeclare-queue';
     }
@@ -60,7 +60,7 @@ EOF;
      *
      * @return int
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $queueName = $input->getArgument('queue');
         $tmpQueueName = $queueName.'_tmp_'.uniqid();

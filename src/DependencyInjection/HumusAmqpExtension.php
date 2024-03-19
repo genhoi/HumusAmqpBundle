@@ -63,7 +63,7 @@ class HumusAmqpExtension extends Extension
      */
     protected $exchangeReferences = [];
 
-    public function getAlias()
+    public function getAlias(): string
     {
         return 'humus';
     }

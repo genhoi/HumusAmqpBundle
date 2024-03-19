@@ -14,7 +14,7 @@ class JsonRpcServerCommand extends Command
 {
     protected ServiceProviderInterface $servers;
 
-    public static function getDefaultName()
+    public static function getDefaultName(): ?string
     {
         return 'humus-amqp:json-rpc-server';
     }
@@ -60,7 +60,7 @@ class JsonRpcServerCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $serverName = $input->getArgument('name');
         if (empty($serverName)) {

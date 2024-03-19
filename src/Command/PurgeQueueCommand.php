@@ -21,7 +21,7 @@ class PurgeQueueCommand extends Command
         parent::__construct();
     }
 
-    public static function getDefaultName()
+    public static function getDefaultName(): ?string
     {
         return 'humus-amqp:purge-queue';
     }
@@ -49,7 +49,7 @@ class PurgeQueueCommand extends Command
             ->setHelp('Purges a queue');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $queueNames = $input->getArgument('name');
         if (empty($queueNames) && $queueName = $input->getOption('name')) {
